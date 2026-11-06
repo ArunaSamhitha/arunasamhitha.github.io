@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aruna Samhitha</title>
+<meta name="description" content="Aruna Samhitha — AI and software engineer building tool-calling agents, RAG pipelines and the production systems around them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single 72ch reading column; hero is a career "trace waterfall" (agent-trace spans), everything after it stays quiet. */
+:root{
+  --paper:#F5F7FA; --surface:#FFFFFF; --ink:#141A2B; --muted:#5A6378; --rule:#DCE1EA;
+  --accent:#2944C7; --accent-soft:#E4E9FB; --span2:#B5641A; --span2-soft:#F7EADD; --span3:#2F7D6B; --span3-soft:#DFF0EB;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0F131D; --surface:#171C29; --ink:#E7EAF2; --muted:#98A1B5; --rule:#2A3142;
+  --accent:#93A8FF; --accent-soft:#1E2747; --span2:#E3A161; --span2-soft:#33261A; --span3:#6CC7B0; --span3-soft:#173029; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F131D; --surface:#171C29; --ink:#E7EAF2; --muted:#98A1B5; --rule:#2A3142;
+  --accent:#93A8FF; --accent-soft:#1E2747; --span2:#E3A161; --span2-soft:#33261A; --span3:#6CC7B0; --span3-soft:#173029; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:760px;margin:0 auto;padding-block:56px 72px;display:grid;gap:72px}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+p{margin:0}
+.label{font:500 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* hero */
+header{display:grid;gap:20px}
+h1{font-size:clamp(40px,7vw,64px);font-weight:700;letter-spacing:-.02em}
+.lede{font-size:19px;max-width:58ch;color:var(--ink)}
+.lede em{font-style:normal;color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;font:500 14px var(--mono)}
+.links a{text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
+.copy{font:500 13px var(--mono);background:none;border:1px solid var(--rule);color:var(--muted);padding:4px 10px;border-radius:999px;cursor:pointer}
+.copy:hover{color:var(--ink);border-color:var(--muted)}
+.status{display:inline-flex;gap:8px;align-items:center;font:500 13px var(--mono);color:var(--span3)}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--span3)}
+
+/* trace waterfall */
+.trace{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px 18px 14px;display:grid;gap:10px}
+.trace-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font:400 12px var(--mono);color:var(--muted)}
+.trace-head b{color:var(--ink);font-weight:500}
+.rows{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:12px;align-items:center}
+.row .name{font:500 13px/1.3 var(--mono);color:var(--ink);overflow-wrap:anywhere}
+.row .name small{display:block;color:var(--muted);font-weight:400}
+.track{position:relative;height:22px;background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),var(--rule) calc(25% - 1px) 25%)}
+.bar{position:absolute;top:3px;bottom:3px;border-radius:3px;left:var(--l);width:var(--w);background:var(--c);
+  transform-origin:left;animation:grow .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0s)}
+@keyframes grow{from{transform:scaleX(.02)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){.bar{animation:none}}
+.axis{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:12px;font:400 11px var(--mono);color:var(--muted)}
+.axis div:last-child{display:grid;grid-template-columns:repeat(4,1fr)}
+@media (max-width:520px){.row,.axis{grid-template-columns:minmax(0,1fr)}.axis div:first-child{display:none}.row{gap:4px}}
+
+/* sections */
+section{display:grid;gap:28px}
+section > h2{font-size:28px;font-weight:700}
+.work{display:grid;gap:40px}
+.item{display:grid;gap:10px}
+.item h3{font-size:22px;font-weight:700}
+.meta{font:400 13px/1.5 var(--mono);color:var(--muted)}
+.item ul{margin:2px 0 0;padding-left:20px;display:grid;gap:6px}
+.item li::marker{color:var(--muted)}
+.nums{display:flex;flex-wrap:wrap;gap:8px}
+.num{font:500 13px var(--mono);background:var(--accent-soft);color:var(--accent);padding:3px 9px;border-radius:4px;font-variant-numeric:tabular-nums}
+.stack{font:400 13px var(--mono);color:var(--muted)}
+.note{font-size:14px;color:var(--muted);border-left:2px solid var(--rule);padding-left:12px}
+.item .links{font-size:13px}
+
+.exp{display:grid;gap:22px}
+.exp .item h3{font-size:18px}
+
+.skills{display:grid;gap:14px}
+.skill{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr);gap:12px}
+.skill dt{font:500 13px/1.6 var(--mono);color:var(--muted)}
+.skill dd{margin:0}
+@media (max-width:520px){.skill{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+footer{border-top:1px solid var(--rule);padding-top:28px;display:grid;gap:14px}
+footer h2{font-size:28px}
+</style>
+</head>
+<body style="margin:0">
+
+<div class="wrap">
+  <header>
+    <span class="status">Open to new-grad SWE and AI engineering roles · Dec 2026</span>
+    <h1>Aruna Samhitha</h1>
+    <p class="lede">I build AI agents and the production systems around them: tool-calling agents, RAG pipelines, and the full-stack apps and cloud infrastructure that put them in front of users. <em>MS Computer Engineering at San José State University. San Francisco Bay Area.</em></p>
+    <div class="links">
+      <a href="mailto:arunasamhitha.mutyala@sjsu.edu" id="email">arunasamhitha.mutyala@sjsu.edu</a>
+      <button class="copy" id="copy-email" type="button">Copy email</button>
+      <a href="https://github.com/ArunaSamhitha">GitHub</a>
+    </div>
+  </header>
+
+  <div class="trace" aria-label="Career timeline shown as a trace">
+    <div class="trace-head"><span><b>trace</b> career.run</span><span>2023 → 2026 · 3 spans · status ok</span></div>
+    <div class="rows">
+      <div class="row"><div class="name">colruyt.integration_apis<small>Software Engineer</small></div>
+        <div class="track"><span class="bar" style="--l:2.1%;--w:35.4%;--c:var(--span2)"></span></div></div>
+      <div class="row"><div class="name">sjsu.research_ai<small>Research Assistant</small></div>
+        <div class="track"><span class="bar" style="--l:68.75%;--w:16.7%;--c:var(--span3);--d:.15s"></span></div></div>
+      <div class="row"><div class="name">panw.ai_assistant<small>SWE Intern, AI</small></div>
+        <div class="track"><span class="bar" style="--l:85.4%;--w:6.25%;--c:var(--accent);--d:.3s"></span></div></div>
+    </div>
+    <div class="axis"><div></div><div><span>2023</span><span>2024</span><span>2025</span><span>2026</span></div></div>
+  </div>
+
+  <section aria-labelledby="work">
+    <h2 id="work">Selected work</h2>
+    <div class="work">
+
+      <article class="item">
+        <p class="label">Palo Alto Networks · Summer 2026</p>
+        <h3>An AI assistant for an internal observability platform</h3>
+        <div class="nums"><span class="num">47% of support requests</span><span class="num">26 tools</span><span class="num">18 environments</span><span class="num">−59% prompt size</span></div>
+        <p>Engineers across 60+ teams were filing tickets for questions the platform could already answer. I built an end-to-end agent that resolves the issues behind 47% of those requests through self-service.</p>
+        <ul>
+          <li>Production agent in Python with Google ADK, MCP, RAG and tool calling, integrating 26 tools across permissions, metrics, documentation, Helm workflows and navigation.</li>
+          <li>Combined semantic retrieval with live platform data to cut prompt size by 59%. Every tool call runs under server-verified identity and permission-aware access.</li>
+          <li>Seven Mimir diagnostic tools with BigQuery caching and fuzzy entity matching that find tenants, analyze cardinality and flag high-cardinality ingestion risks.</li>
+          <li>React/TypeScript frontend, Node.js integration layer and FastAPI services on GKE with Helm, with agent, retrieval and tool calls traced in Langfuse.</li>
+        </ul>
+        <p class="stack">Python · Google ADK · MCP · RAG · React · TypeScript · FastAPI · GKE · Helm · BigQuery · Langfuse</p>
+        <p class="note">Internal work, so there's no public code. I'm happy to walk through the architecture in an interview.</p>
+      </article>
+
+      <article class="item">
+        <p class="label">Project</p>
+        <h3>CartLog AI: a multimodal, multi-agent shopping assistant</h3>
+        <div class="nums"><span class="num">&lt;500 ms capture → query</span><span class="num">−40% search latency</span><span class="num">&lt;100 ms p95 retrieval</span></div>
+        <p>Point a phone camera or Meta smart glasses at a product and get a structured search across marketplaces.</p>
+        <ul>
+          <li>Multimodal pipeline with React, FastAPI and vision-language models that turns camera feeds and smart-glasses captures into structured search queries in under 500 ms.</li>
+          <li>Asynchronous agent backend on the Model Context Protocol that runs research, eBay and Amazon agents in parallel, cutting cross-marketplace search latency by 40%.</li>
+          <li>RAG memory with Pinecone, OpenAI embeddings and SQLite, serving retrieval at sub-100 ms p95.</li>
+        </ul>
+        <p class="stack">React · FastAPI · Vision-Language Models · MCP · Pinecone · SQLite</p>
+        <div class="links"><a href="https://github.com/ArunaSamhitha/CartLog-AI">View code</a></div>
+      </article>
+
+      <article class="item">
+        <p class="label">Project</p>
+        <h3>Food Allergen Detection: OCR + RAG over ingredient labels</h3>
+        <p>Upload a photo of a food label and ask whether it's safe for you. The backend cleans the image with OpenCV, reads the ingredients with Tesseract OCR, and answers with a LangChain retrieval chain grounded in your saved dietary preferences.</p>
+        <p class="stack">Python · Flask · OpenCV · Tesseract · LangChain · FAISS · OpenAI</p>
+        <div class="links"><a href="https://github.com/ArunaSamhitha/Food-Allergen-Detection-System">View code</a></div>
+      </article>
+
+      <article class="item">
+        <p class="label">Project</p>
+        <h3>Web UI Copilot: multi-agent answers as charts</h3>
+        <p>A chat front end that sends each question to a domain agent (general, clinical or food), parses the structured JSON reply and picks a bar, pie or line chart for it. Charts can be saved as widgets to build a personal dashboard.</p>
+        <p class="stack">React · Recharts · Flask</p>
+      </article>
+
+      <article class="item">
+        <p class="label">Project</p>
+        <h3>Cartoon colorization with CycleGAN</h3>
+        <p>Colors black-and-white cartoon frames using a CycleGAN trained on unpaired data: ResNet generators, PatchGAN discriminators, and cycle-consistency and identity losses. Includes a Colab training notebook and video inference that measures frames per second.</p>
+        <p class="stack">Python · PyTorch · OpenCV · Colab</p>
+        <div class="links"><a href="https://github.com/ArunaSamhitha/Cartoon-Colorization-Using-CycleGAN">View code</a></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section aria-labelledby="exp">
+    <h2 id="exp">Experience</h2>
+    <div class="exp">
+      <article class="item">
+        <h3>Software Engineering Intern, AI · Palo Alto Networks</h3>
+        <p class="meta">Santa Clara, CA · Jun – Aug 2026</p>
+        <p>Built the observability assistant described above.</p>
+      </article>
+      <article class="item">
+        <h3>Research Assistant, AI and Analytics · San José State University</h3>
+        <p class="meta">San José, CA · Oct 2025 – Jun 2026</p>
+        <p>Built an AI-assisted platform that analyzes links between technology adoption and health outcomes, with React and FastAPI dashboards over statistical models and APIs tuned for low-latency inference.</p>
+      </article>
+      <article class="item">
+        <h3>Software Engineer · Colruyt Group</h3>
+        <p class="meta">India · Feb 2023 – Jul 2024</p>
+        <ul>
+          <li>15+ RESTful APIs for self-checkout and payment systems, holding sub-100 ms p95 latency under load.</li>
+          <li>Reusable integration services across payment gateways that cut cross-application integration overhead by 35%.</li>
+          <li>Jenkins CI/CD that containerized 12 services with Docker, cutting deployment downtime by 30%.</li>
+          <li>Platform upgrade across 12 production servers at 99.99% availability.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="skills">
+    <h2 id="skills">Tools I work with</h2>
+    <dl class="skills">
+      <div class="skill"><dt>AI engineering</dt><dd>Google ADK, LangGraph, LangChain, MCP, agent orchestration, RAG, vector search, evaluation, guardrails, Langfuse</dd></div>
+      <div class="skill"><dt>ML</dt><dd>PyTorch, Hugging Face Transformers, scikit-learn, computer vision, NLP, multimodal models</dd></div>
+      <div class="skill"><dt>Backend &amp; full-stack</dt><dd>Python, Java, SQL, FastAPI, Node.js, React, TypeScript, PostgreSQL</dd></div>
+      <div class="skill"><dt>Cloud &amp; infra</dt><dd>GCP (Vertex AI, BigQuery, GKE), Kubernetes, Docker, Helm, OpenTelemetry, GitLab CI/CD</dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    <h2>Let's talk</h2>
+    <p>I'm graduating in December 2026 and looking for software engineering and AI engineering roles. The fastest way to reach me is email.</p>
+    <div class="links">
+      <a href="mailto:arunasamhitha.mutyala@sjsu.edu">arunasamhitha.mutyala@sjsu.edu</a>
+      <a href="https://github.com/ArunaSamhitha">GitHub</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+document.getElementById('copy-email').addEventListener('click', function(){
+  var btn=this, addr='arunasamhitha.mutyala@sjsu.edu';
+  var done=function(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy email'},1600)};
+  var fallback=function(){var r=document.createRange();r.selectNodeContents(document.getElementById('email'));var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected';};
+  try{navigator.clipboard.writeText(addr).then(done,fallback)}catch(e){fallback()}
+});
+</script>
+</body>
+</html>
