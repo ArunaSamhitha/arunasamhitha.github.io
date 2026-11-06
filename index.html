@@ -4,232 +4,348 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Aruna Samhitha</title>
-<meta name="description" content="Aruna Samhitha — AI and software engineer building tool-calling agents, RAG pipelines and the production systems around them.">
+<meta name="description" content="Aruna Samhitha: AI and software engineer. AI agents, ML systems and the products around them.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: single 72ch reading column; hero is a career "trace waterfall" (agent-trace spans), everything after it stays quiet. */
+/* Layout: a pinboard. Sticky bar with board filters + search; masonry of pins (CSS columns); click a pin for a close-up dialog. */
 :root{
-  --paper:#F5F7FA; --surface:#FFFFFF; --ink:#141A2B; --muted:#5A6378; --rule:#DCE1EA;
-  --accent:#2944C7; --accent-soft:#E4E9FB; --span2:#B5641A; --span2-soft:#F7EADD; --span3:#2F7D6B; --span3-soft:#DFF0EB;
+  --bg:#FBFAF8; --pin:#FFFFFF; --ink:#151515; --muted:#62615D; --rule:#E7E4DE; --chip:#EFEDE8;
+  --accent:#D9412B; --accent-ink:#FFFFFF;
+  --t1:#F3DCCF; --t2:#DCE6F2; --t3:#E2EDDD; --t4:#EFE3F3; --t5:#F5EBCB;
   --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
-  --body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --body:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#0F131D; --surface:#171C29; --ink:#E7EAF2; --muted:#98A1B5; --rule:#2A3142;
-  --accent:#93A8FF; --accent-soft:#1E2747; --span2:#E3A161; --span2-soft:#33261A; --span3:#6CC7B0; --span3-soft:#173029; color-scheme:dark}}
+  --bg:#111111; --pin:#1C1C1C; --ink:#F2F1EE; --muted:#A3A19B; --rule:#2C2C2C; --chip:#262626;
+  --accent:#FF6A50; --accent-ink:#111111;
+  --t1:#3A2A22; --t2:#1F2A38; --t3:#22301F; --t4:#30243A; --t5:#3A3220; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --paper:#0F131D; --surface:#171C29; --ink:#E7EAF2; --muted:#98A1B5; --rule:#2A3142;
-  --accent:#93A8FF; --accent-soft:#1E2747; --span2:#E3A161; --span2-soft:#33261A; --span3:#6CC7B0; --span3-soft:#173029; color-scheme:dark}
+  --bg:#111111; --pin:#1C1C1C; --ink:#F2F1EE; --muted:#A3A19B; --rule:#2C2C2C; --chip:#262626;
+  --accent:#FF6A50; --accent-ink:#111111;
+  --t1:#3A2A22; --t2:#1F2A38; --t3:#22301F; --t4:#30243A; --t5:#3A3220; color-scheme:dark}
 
 *{box-sizing:border-box}
-body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.wrap{max-width:760px;margin:0 auto;padding-block:56px 72px;display:grid;gap:72px}
-a{color:var(--accent);text-underline-offset:3px}
-a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
-p{margin:0}
-.label{font:500 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body)}
+button,input{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:12px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 
-/* hero */
-header{display:grid;gap:20px}
-h1{font-size:clamp(40px,7vw,64px);font-weight:700;letter-spacing:-.02em}
-.lede{font-size:19px;max-width:58ch;color:var(--ink)}
-.lede em{font-style:normal;color:var(--muted)}
-.links{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;font:500 14px var(--mono)}
-.links a{text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
-.copy{font:500 13px var(--mono);background:none;border:1px solid var(--rule);color:var(--muted);padding:4px 10px;border-radius:999px;cursor:pointer}
-.copy:hover{color:var(--ink);border-color:var(--muted)}
-.status{display:inline-flex;gap:8px;align-items:center;font:500 13px var(--mono);color:var(--span3)}
-.status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--span3)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);
+  padding:12px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.bar-top{display:flex;gap:10px;align-items:center}
+.me{display:flex;align-items:center;gap:10px;text-decoration:none;flex:none}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:800 16px var(--display)}
+.me b{font:700 16px var(--display)}
+.search{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:var(--chip);border-radius:999px;padding:0 16px;height:44px}
+.search input{flex:1;min-width:0;border:0;background:none;outline:none;font-size:15px}
+.search svg{flex:none;opacity:.6}
+.contact{flex:none;background:var(--ink);color:var(--bg);border:0;border-radius:999px;padding:0 18px;height:44px;font-weight:600;cursor:pointer;text-decoration:none;display:grid;place-items:center}
+.boards{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.boards button{flex:none;border:0;background:none;padding:8px 14px;border-radius:999px;font-weight:600;cursor:pointer;color:var(--ink)}
+.boards button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.boards button:not([aria-pressed="true"]):hover{background:var(--chip)}
+@media (max-width:560px){.me b{display:none}.contact{padding:0 14px}}
 
-/* trace waterfall */
-.trace{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px 18px 14px;display:grid;gap:10px}
-.trace-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font:400 12px var(--mono);color:var(--muted)}
-.trace-head b{color:var(--ink);font-weight:500}
-.rows{display:grid;gap:8px}
-.row{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:12px;align-items:center}
-.row .name{font:500 13px/1.3 var(--mono);color:var(--ink);overflow-wrap:anywhere}
-.row .name small{display:block;color:var(--muted);font-weight:400}
-.track{position:relative;height:22px;background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),var(--rule) calc(25% - 1px) 25%)}
-.bar{position:absolute;top:3px;bottom:3px;border-radius:3px;left:var(--l);width:var(--w);background:var(--c);
-  transform-origin:left;animation:grow .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0s)}
-@keyframes grow{from{transform:scaleX(.02)}to{transform:scaleX(1)}}
-@media (prefers-reduced-motion:reduce){.bar{animation:none}}
-.axis{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:12px;font:400 11px var(--mono);color:var(--muted)}
-.axis div:last-child{display:grid;grid-template-columns:repeat(4,1fr)}
-@media (max-width:520px){.row,.axis{grid-template-columns:minmax(0,1fr)}.axis div:first-child{display:none}.row{gap:4px}}
+main{padding:8px max(16px,env(safe-area-inset-right,0px)) 56px max(16px,env(safe-area-inset-left,0px))}
+.board{columns:4 250px;column-gap:16px;max-width:1400px;margin:0 auto}
+.pin{break-inside:avoid;margin:0 0 16px;display:block;width:100%;text-align:left;border:0;padding:0;background:none;cursor:pointer;color:inherit}
+.pin[hidden]{display:none}
+.art{border-radius:20px;overflow:hidden;position:relative;background:var(--chip);transition:filter .15s}
+.pin:hover .art{filter:brightness(.94)}
+.save{position:absolute;top:12px;right:12px;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;opacity:0;transition:opacity .15s}
+.pin:hover .save,.pin:focus-visible .save{opacity:1}
+@media (hover:none){.save{display:none}}
+.cap{padding:8px 4px 0;display:grid;gap:2px}
+.cap b{font-weight:600;font-size:15px;line-height:1.3}
+.cap span{color:var(--muted);font-size:13px}
+.empty{text-align:center;color:var(--muted);padding:40px 0}
 
-/* sections */
-section{display:grid;gap:28px}
-section > h2{font-size:28px;font-weight:700}
-.work{display:grid;gap:40px}
-.item{display:grid;gap:10px}
-.item h3{font-size:22px;font-weight:700}
-.meta{font:400 13px/1.5 var(--mono);color:var(--muted)}
-.item ul{margin:2px 0 0;padding-left:20px;display:grid;gap:6px}
-.item li::marker{color:var(--muted)}
-.nums{display:flex;flex-wrap:wrap;gap:8px}
-.num{font:500 13px var(--mono);background:var(--accent-soft);color:var(--accent);padding:3px 9px;border-radius:4px;font-variant-numeric:tabular-nums}
-.stack{font:400 13px var(--mono);color:var(--muted)}
-.note{font-size:14px;color:var(--muted);border-left:2px solid var(--rule);padding-left:12px}
-.item .links{font-size:13px}
+/* pin art (all drawn with CSS/SVG, no stock images) */
+.art-pad{padding:20px;display:grid;gap:12px}
+.hello{background:var(--t1)}
+.hello h1{font:800 clamp(30px,4vw,40px)/1.02 var(--display);margin:0;letter-spacing:-.02em;text-wrap:balance}
+.hello p{margin:0}
+.status{display:inline-flex;gap:8px;align-items:center;font-weight:600;font-size:13px}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:#2E9E5B}
+.metric{background:var(--t2)}
+.big{font:800 64px/.9 var(--display);letter-spacing:-.03em}
+.metric small{font-weight:600}
+.trace{display:grid;gap:7px;font:500 11px var(--mono)}
+.trace div{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center}
+.trace i{display:block;height:10px;border-radius:3px;background:var(--ink);opacity:.85}
+.label{background:var(--t5);font:500 12.5px/1.6 var(--mono)}
+.label .hl{background:var(--accent);color:var(--accent-ink);border-radius:3px;padding:0 3px}
+.label .warn{text-decoration:underline wavy var(--accent);text-underline-offset:3px}
+.verdict{font:800 22px var(--display);color:var(--accent)}
+.toon{aspect-ratio:4/5;background:linear-gradient(105deg,transparent 49.6%,var(--ink) 49.6% 50.4%,transparent 50.4%),
+  linear-gradient(90deg,#d6d6d6 0 50%,transparent 50%),linear-gradient(160deg,#2b6cb0,#e53e3e 55%,#f6c945)}
+.toon svg{position:absolute;inset:0;width:100%;height:100%}
+.toon .tag{position:absolute;bottom:12px;font:600 12px var(--mono);background:var(--pin);border-radius:999px;padding:4px 10px}
+.agents{background:var(--t3)}
+.lanes{display:grid;gap:8px}
+.lane{display:flex;align-items:center;gap:8px;font:500 12px var(--mono)}
+.lane span{width:62px}
+.lane i{height:22px;border-radius:6px;background:var(--pin);display:block;position:relative}
+.lane i::after{content:"";position:absolute;inset:4px auto 4px 4px;width:calc(100% - 8px);border-radius:3px;background:var(--ink);opacity:.8}
+.exp{background:var(--t4)}
+.exp .when{font:500 12px var(--mono);color:var(--muted)}
+.exp h3{margin:0;font:800 22px/1.1 var(--display)}
+.stack{display:flex;flex-wrap:wrap;gap:6px}
+.stack span{background:var(--pin);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:500}
+.edu{background:var(--t2)}
+.quote{background:var(--ink);color:var(--bg)}
+.quote p{font:600 22px/1.25 var(--display);margin:0}
 
-.exp{display:grid;gap:22px}
-.exp .item h3{font-size:18px}
-
-.skills{display:grid;gap:14px}
-.skill{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr);gap:12px}
-.skill dt{font:500 13px/1.6 var(--mono);color:var(--muted)}
-.skill dd{margin:0}
-@media (max-width:520px){.skill{grid-template-columns:minmax(0,1fr);gap:2px}}
-
-footer{border-top:1px solid var(--rule);padding-top:28px;display:grid;gap:14px}
-footer h2{font-size:28px}
+/* close-up */
+dialog{border:0;padding:0;border-radius:28px;width:min(920px,calc(100vw - 32px));max-height:calc(100vh - 48px);background:var(--pin);color:var(--ink);box-shadow:0 20px 60px rgb(0 0 0 / .25)}
+dialog::backdrop{background:rgb(0 0 0 / .55)}
+.close-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+.close-art{padding:16px}
+.close-art .art{height:100%}
+.close-body{padding:28px 28px 28px 12px;display:grid;gap:14px;align-content:start;min-width:0}
+.close-body h2{margin:0;font:800 30px/1.08 var(--display);letter-spacing:-.01em;text-wrap:balance}
+.close-body p{margin:0;max-width:62ch}
+.close-body ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.kicker{font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.note{font-size:13.5px;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:700;border-radius:999px;padding:10px 18px}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.x{position:absolute;z-index:2;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:0;background:var(--chip);cursor:pointer;font-size:20px;line-height:1}
+@media (max-width:720px){.close-wrap{grid-template-columns:minmax(0,1fr)}.close-body{padding:4px 22px 26px}.close-art .art{max-height:300px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body style="margin:0">
 
-<div class="wrap">
-  <header>
-    <span class="status">Open to new-grad SWE and AI engineering roles · Dec 2026</span>
-    <h1>Aruna Samhitha</h1>
-    <p class="lede">I build AI agents and the production systems around them: tool-calling agents, RAG pipelines, and the full-stack apps and cloud infrastructure that put them in front of users. <em>MS Computer Engineering at San José State University. San Francisco Bay Area.</em></p>
-    <div class="links">
-      <a href="mailto:arunasamhitha.mutyala@sjsu.edu" id="email">arunasamhitha.mutyala@sjsu.edu</a>
-      <button class="copy" id="copy-email" type="button">Copy email</button>
-      <a href="https://github.com/ArunaSamhitha">GitHub</a>
-    </div>
-  </header>
-
-  <div class="trace" aria-label="Career timeline shown as a trace">
-    <div class="trace-head"><span><b>trace</b> career.run</span><span>2023 → 2026 · 3 spans · status ok</span></div>
-    <div class="rows">
-      <div class="row"><div class="name">colruyt.integration_apis<small>Software Engineer</small></div>
-        <div class="track"><span class="bar" style="--l:2.1%;--w:35.4%;--c:var(--span2)"></span></div></div>
-      <div class="row"><div class="name">sjsu.research_ai<small>Research Assistant</small></div>
-        <div class="track"><span class="bar" style="--l:68.75%;--w:16.7%;--c:var(--span3);--d:.15s"></span></div></div>
-      <div class="row"><div class="name">panw.ai_assistant<small>SWE Intern, AI</small></div>
-        <div class="track"><span class="bar" style="--l:85.4%;--w:6.25%;--c:var(--accent);--d:.3s"></span></div></div>
-    </div>
-    <div class="axis"><div></div><div><span>2023</span><span>2024</span><span>2025</span><span>2026</span></div></div>
+<header class="bar">
+  <div class="bar-top">
+    <a class="me" href="#" aria-label="Aruna Samhitha, home"><span class="avatar" aria-hidden="true">AS</span><b>Aruna Samhitha</b></a>
+    <label class="search" for="q">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="Search my work: MCP, PyTorch, OCR…" autocomplete="off">
+    </label>
+    <a class="contact" href="mailto:arunasamhitha.mutyala@sjsu.edu">Contact</a>
   </div>
+  <nav class="boards" aria-label="Boards">
+    <button type="button" aria-pressed="true" data-board="all">All</button>
+    <button type="button" aria-pressed="false" data-board="agents">AI agents</button>
+    <button type="button" aria-pressed="false" data-board="ml">ML &amp; vision</button>
+    <button type="button" aria-pressed="false" data-board="fullstack">Full-stack</button>
+    <button type="button" aria-pressed="false" data-board="experience">Experience</button>
+  </nav>
+</header>
 
-  <section aria-labelledby="work">
-    <h2 id="work">Selected work</h2>
-    <div class="work">
+<main>
+  <div class="board" id="board">
 
-      <article class="item">
-        <p class="label">Palo Alto Networks · Summer 2026</p>
-        <h3>An AI assistant for an internal observability platform</h3>
-        <div class="nums"><span class="num">47% of support requests</span><span class="num">26 tools</span><span class="num">18 environments</span><span class="num">−59% prompt size</span></div>
-        <p>Engineers across 60+ teams were filing tickets for questions the platform could already answer. I built an end-to-end agent that resolves the issues behind 47% of those requests through self-service.</p>
-        <ul>
-          <li>Production agent in Python with Google ADK, MCP, RAG and tool calling, integrating 26 tools across permissions, metrics, documentation, Helm workflows and navigation.</li>
-          <li>Combined semantic retrieval with live platform data to cut prompt size by 59%. Every tool call runs under server-verified identity and permission-aware access.</li>
-          <li>Seven Mimir diagnostic tools with BigQuery caching and fuzzy entity matching that find tenants, analyze cardinality and flag high-cardinality ingestion risks.</li>
-          <li>React/TypeScript frontend, Node.js integration layer and FastAPI services on GKE with Helm, with agent, retrieval and tool calls traced in Langfuse.</li>
-        </ul>
-        <p class="stack">Python · Google ADK · MCP · RAG · React · TypeScript · FastAPI · GKE · Helm · BigQuery · Langfuse</p>
-        <p class="note">Internal work, so there's no public code. I'm happy to walk through the architecture in an interview.</p>
-      </article>
+    <button class="pin" data-id="hello" data-boards="experience">
+      <div class="art hello art-pad">
+        <span class="status">Open to new-grad SWE, AI and ML roles</span>
+        <h1>Hi, I'm Aruna. I build AI agents and the systems around them.</h1>
+        <p>MS Computer Engineering, San José State University, graduating December 2026. San Francisco Bay Area.</p>
+      </div>
+      <div class="cap"><b>About me</b><span>Start here</span></div>
+    </button>
 
-      <article class="item">
-        <p class="label">Project</p>
-        <h3>CartLog AI: a multimodal, multi-agent shopping assistant</h3>
-        <div class="nums"><span class="num">&lt;500 ms capture → query</span><span class="num">−40% search latency</span><span class="num">&lt;100 ms p95 retrieval</span></div>
-        <p>Point a phone camera or Meta smart glasses at a product and get a structured search across marketplaces.</p>
-        <ul>
-          <li>Multimodal pipeline with React, FastAPI and vision-language models that turns camera feeds and smart-glasses captures into structured search queries in under 500 ms.</li>
-          <li>Asynchronous agent backend on the Model Context Protocol that runs research, eBay and Amazon agents in parallel, cutting cross-marketplace search latency by 40%.</li>
-          <li>RAG memory with Pinecone, OpenAI embeddings and SQLite, serving retrieval at sub-100 ms p95.</li>
-        </ul>
-        <p class="stack">React · FastAPI · Vision-Language Models · MCP · Pinecone · SQLite</p>
-        <div class="links"><a href="https://github.com/ArunaSamhitha/CartLog-AI">View code</a></div>
-      </article>
+    <button class="pin" data-id="panw" data-boards="agents experience fullstack">
+      <div class="art metric art-pad">
+        <span class="kicker">Palo Alto Networks · 2026</span>
+        <span class="big">47%</span>
+        <small>of support requests now self-served by an AI assistant</small>
+        <div class="trace" aria-hidden="true">
+          <div>retrieve<i style="width:40%"></i></div><div>plan<i style="width:22%;margin-left:40%"></i></div>
+          <div>tools ×26<i style="width:55%;margin-left:30%"></i></div><div>answer<i style="width:18%;margin-left:82%"></i></div>
+        </div>
+      </div>
+      <div class="cap"><b>An AI assistant for an observability platform</b><span>Google ADK · MCP · RAG · GKE</span></div>
+    </button>
 
-      <article class="item">
-        <p class="label">Project</p>
-        <h3>Food Allergen Detection: OCR + RAG over ingredient labels</h3>
-        <p>Upload a photo of a food label and ask whether it's safe for you. The backend cleans the image with OpenCV, reads the ingredients with Tesseract OCR, and answers with a LangChain retrieval chain grounded in your saved dietary preferences.</p>
-        <p class="stack">Python · Flask · OpenCV · Tesseract · LangChain · FAISS · OpenAI</p>
-        <div class="links"><a href="https://github.com/ArunaSamhitha/Food-Allergen-Detection-System">View code</a></div>
-      </article>
+    <button class="pin" data-id="cartlog" data-boards="agents fullstack">
+      <div class="art agents art-pad">
+        <span class="kicker">CartLog AI</span>
+        <div class="lanes" aria-hidden="true">
+          <div class="lane"><span>research</span><i style="width:60%"></i></div>
+          <div class="lane"><span>ebay</span><i style="width:75%"></i></div>
+          <div class="lane"><span>amazon</span><i style="width:92%"></i></div>
+        </div>
+        <p><b>59%</b> faster than calling agents one by one</p>
+      </div>
+      <div class="cap"><b>Snap a product, three agents shop in parallel</b><span>MCP · FastAPI · React · vision model</span></div>
+    </button>
 
-      <article class="item">
-        <p class="label">Project</p>
-        <h3>Web UI Copilot: multi-agent answers as charts</h3>
-        <p>A chat front end that sends each question to a domain agent (general, clinical or food), parses the structured JSON reply and picks a bar, pie or line chart for it. Charts can be saved as widgets to build a personal dashboard.</p>
-        <p class="stack">React · Recharts · Flask</p>
-      </article>
+    <button class="pin" data-id="allergen" data-boards="ml fullstack">
+      <div class="art label art-pad">
+        <span class="kicker" style="font-family:var(--body)">AllergenCheck</span>
+        <div>INGREDIENTS: SUGAR, <span class="hl">WHEAT FLOUR</span>, PALM OIL, <span class="hl">WHEY</span>, COCOA, SOY LECITHIN, SALT. <span class="warn">MAY CONTAIN TREE NUTS.</span></div>
+        <span class="verdict">Don't eat: gluten, milk</span>
+      </div>
+      <div class="cap"><b>Is this label safe for me?</b><span>OCR · rule engine · Open Food Facts · Docker</span></div>
+    </button>
 
-      <article class="item">
-        <p class="label">Project</p>
-        <h3>Cartoon colorization with CycleGAN</h3>
-        <p>Colors black-and-white cartoon frames using a CycleGAN trained on unpaired data: ResNet generators, PatchGAN discriminators, and cycle-consistency and identity losses. Includes a Colab training notebook and video inference that measures frames per second.</p>
-        <p class="stack">Python · PyTorch · OpenCV · Colab</p>
-        <div class="links"><a href="https://github.com/ArunaSamhitha/Cartoon-Colorization-Using-CycleGAN">View code</a></div>
-      </article>
+    <button class="pin" data-id="cyclegan" data-boards="ml">
+      <div class="art toon">
+        <svg viewBox="0 0 200 250" aria-hidden="true"><g fill="none" stroke="#111" stroke-width="3" stroke-linejoin="round">
+          <path d="M60 210 L100 60 L140 210 Z"/><circle cx="100" cy="95" r="18"/><path d="M40 150 Q100 120 160 150"/></g></svg>
+        <span class="tag" style="left:12px">gray</span><span class="tag" style="right:12px">color</span>
+      </div>
+      <div class="cap"><b>Coloring black-and-white cartoons with CycleGAN</b><span>PyTorch · unpaired image translation</span></div>
+    </button>
 
-    </div>
-  </section>
+    <button class="pin" data-id="quote" data-boards="agents">
+      <div class="art quote art-pad"><p>“A good agent is mostly good plumbing: retrieval, permissions, timeouts and traces.”</p></div>
+      <div class="cap"><b>What I've learned building agents</b><span>Notes</span></div>
+    </button>
 
-  <section aria-labelledby="exp">
-    <h2 id="exp">Experience</h2>
-    <div class="exp">
-      <article class="item">
-        <h3>Software Engineering Intern, AI · Palo Alto Networks</h3>
-        <p class="meta">Santa Clara, CA · Jun – Aug 2026</p>
-        <p>Built the observability assistant described above.</p>
-      </article>
-      <article class="item">
-        <h3>Research Assistant, AI and Analytics · San José State University</h3>
-        <p class="meta">San José, CA · Oct 2025 – Jun 2026</p>
-        <p>Built an AI-assisted platform that analyzes links between technology adoption and health outcomes, with React and FastAPI dashboards over statistical models and APIs tuned for low-latency inference.</p>
-      </article>
-      <article class="item">
-        <h3>Software Engineer · Colruyt Group</h3>
-        <p class="meta">India · Feb 2023 – Jul 2024</p>
-        <ul>
-          <li>15+ RESTful APIs for self-checkout and payment systems, holding sub-100 ms p95 latency under load.</li>
-          <li>Reusable integration services across payment gateways that cut cross-application integration overhead by 35%.</li>
-          <li>Jenkins CI/CD that containerized 12 services with Docker, cutting deployment downtime by 30%.</li>
-          <li>Platform upgrade across 12 production servers at 99.99% availability.</li>
-        </ul>
-      </article>
-    </div>
-  </section>
+    <button class="pin" data-id="colruyt" data-boards="experience fullstack">
+      <div class="art exp art-pad">
+        <span class="when">Feb 2023 – Jul 2024</span>
+        <h3>Payments &amp; self-checkout APIs</h3>
+        <div class="stack"><span>15+ REST APIs</span><span>&lt;100 ms p95</span><span>99.99% uptime</span></div>
+      </div>
+      <div class="cap"><b>Software Engineer, Colruyt Group</b><span>Integration · CI/CD · Docker</span></div>
+    </button>
 
-  <section aria-labelledby="skills">
-    <h2 id="skills">Tools I work with</h2>
-    <dl class="skills">
-      <div class="skill"><dt>AI engineering</dt><dd>Google ADK, LangGraph, LangChain, MCP, agent orchestration, RAG, vector search, evaluation, guardrails, Langfuse</dd></div>
-      <div class="skill"><dt>ML</dt><dd>PyTorch, Hugging Face Transformers, scikit-learn, computer vision, NLP, multimodal models</dd></div>
-      <div class="skill"><dt>Backend &amp; full-stack</dt><dd>Python, Java, SQL, FastAPI, Node.js, React, TypeScript, PostgreSQL</dd></div>
-      <div class="skill"><dt>Cloud &amp; infra</dt><dd>GCP (Vertex AI, BigQuery, GKE), Kubernetes, Docker, Helm, OpenTelemetry, GitLab CI/CD</dd></div>
-    </dl>
-  </section>
+    <button class="pin" data-id="research" data-boards="experience ml fullstack">
+      <div class="art edu art-pad">
+        <span class="when">Oct 2025 – Jun 2026</span>
+        <h3 style="margin:0;font:800 22px/1.1 var(--display)">Technology adoption × health outcomes</h3>
+        <div class="stack"><span>React</span><span>FastAPI</span><span>statistical models</span></div>
+      </div>
+      <div class="cap"><b>Research Assistant, SJSU</b><span>AI and analytics</span></div>
+    </button>
 
-  <footer>
-    <h2>Let's talk</h2>
-    <p>I'm graduating in December 2026 and looking for software engineering and AI engineering roles. The fastest way to reach me is email.</p>
-    <div class="links">
-      <a href="mailto:arunasamhitha.mutyala@sjsu.edu">arunasamhitha.mutyala@sjsu.edu</a>
-      <a href="https://github.com/ArunaSamhitha">GitHub</a>
-    </div>
-  </footer>
-</div>
+    <button class="pin" data-id="skills" data-boards="agents ml fullstack">
+      <div class="art art-pad" style="background:var(--t3)">
+        <span class="kicker">Toolbox</span>
+        <div class="stack"><span>Python</span><span>SQL</span><span>TypeScript</span><span>PyTorch</span><span>Hugging Face</span><span>Google ADK</span><span>LangGraph</span><span>MCP</span><span>RAG</span><span>FastAPI</span><span>React</span><span>Node.js</span><span>PostgreSQL</span><span>GCP</span><span>Kubernetes</span><span>Docker</span></div>
+      </div>
+      <div class="cap"><b>Tools I work with</b><span>Skills</span></div>
+    </button>
+
+  </div>
+  <p class="empty" id="empty" hidden>No pins match. Try "agents", "PyTorch" or "OCR".</p>
+</main>
+
+<dialog id="closeup" aria-labelledby="cu-title">
+  <button class="x" type="button" id="cu-close" aria-label="Close">×</button>
+  <div class="close-wrap">
+    <div class="close-art" id="cu-art"></div>
+    <div class="close-body" id="cu-body"></div>
+  </div>
+</dialog>
 
 <script>
-document.getElementById('copy-email').addEventListener('click', function(){
-  var btn=this, addr='arunasamhitha.mutyala@sjsu.edu';
-  var done=function(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy email'},1600)};
-  var fallback=function(){var r=document.createRange();r.selectNodeContents(document.getElementById('email'));var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected';};
-  try{navigator.clipboard.writeText(addr).then(done,fallback)}catch(e){fallback()}
-});
+const DETAIL = {
+  hello: {kicker: "About", title: "Aruna Samhitha", html: `
+    <p>I'm an AI and software engineer finishing an MS in Computer Engineering at San José State University (December 2026). I like the part of AI work that turns a model into something people rely on: tool calling, retrieval, permissions, evaluation and the full-stack app around it.</p>
+    <p>Most recently I built a production AI assistant at Palo Alto Networks. Before grad school I spent a year and a half building payment and self-checkout APIs at Colruyt Group.</p>
+    <p>I'm looking for new-grad software, AI and ML engineering roles.</p>`,
+    actions: [["Email me", "mailto:arunasamhitha.mutyala@sjsu.edu"], ["GitHub", "https://github.com/ArunaSamhitha"]]},
+  panw: {kicker: "Palo Alto Networks · Software Engineering Intern, AI · Summer 2026", title: "An AI assistant for an internal observability platform", html: `
+    <p>Engineers across 60+ teams filed tickets for questions the platform could already answer. I built an end-to-end agent that resolves the issues behind 47% of those requests through self-service, across 18 environments.</p>
+    <ul>
+      <li>Production agent in Python with Google ADK, MCP, RAG and tool calling, integrating 26 tools across permissions, metrics, documentation, Helm workflows and navigation.</li>
+      <li>Combined semantic retrieval with live platform data to cut prompt size by 59%. Every tool call runs under server-verified identity and permission-aware access.</li>
+      <li>Seven diagnostic tools with BigQuery caching and fuzzy entity matching that find tenants, analyze metric cardinality and flag high-cardinality ingestion risks.</li>
+      <li>React/TypeScript frontend, Node.js integration layer and FastAPI services on GKE with Helm, with agent, retrieval and tool calls traced in Langfuse.</li>
+    </ul>
+    <p class="note">Internal work, so there's no public code. Happy to walk through the architecture.</p>`, actions: []},
+  cartlog: {kicker: "Project · AI agents", title: "CartLog AI: snap a product, three agents shop in parallel", html: `
+    <p>Take a photo of a product or describe it. A vision-language model turns it into a structured search. Research, eBay and Amazon agents run as separate MCP servers and are called at the same time, each with its own timeout, so one slow marketplace never blocks the answer.</p>
+    <ul>
+      <li>Parallel fan-out over MCP cut median latency from 2.6 s to 1.1 s (59%) in the benchmark, measured with simulated API latency.</li>
+      <li>Ranks listings by relevance, value against the researched price range, and rating.</li>
+      <li>Remembers past searches with SQLite plus vector recall (Pinecone, or local cosine similarity).</li>
+      <li>Runs end to end with no API keys on mock data. CI drives a real browser through a search on every push.</li>
+    </ul>`, actions: [["View code", "https://github.com/ArunaSamhitha/CartLog-AI"]]},
+  allergen: {kicker: "Project · Applied ML", title: "AllergenCheck: is this label safe for me?", html: `
+    <p>Photograph an ingredient list, scan a barcode or paste the text, and get a verdict against your allergies and diet. Every flag points at the exact words on the label that caused it.</p>
+    <ul>
+      <li>Version 1 let an LLM decide. Version 2 uses a deterministic engine: 9 major allergens plus diets, label synonyms (whey → milk, semolina → wheat) and look-alike guards (nutmeg, cocoa butter, buckwheat).</li>
+      <li>Reads "Contains" statements and "may contain" warnings separately, and repairs OCR typos without "correcting" real words.</li>
+      <li>OpenCV + Tesseract OCR in memory, Open Food Facts barcode lookup, FastAPI, Docker, and CI that runs real OCR on every push.</li>
+    </ul>`, actions: [["View code", "https://github.com/ArunaSamhitha/Food-Allergen-Detection-System"]]},
+  cyclegan: {kicker: "Project · Computer vision", title: "Coloring black-and-white cartoons with CycleGAN", html: `
+    <p>A CycleGAN that learns to color cartoon frames without paired examples. It splits one folder of color frames into a grayscale half and a color half, so the model never sees the true colors of what it colors.</p>
+    <ul>
+      <li>ResNet generators, 70×70 PatchGAN discriminators, adversarial + cycle-consistency + identity losses, an image history buffer and linear LR decay.</li>
+      <li>Trained on public-domain 1940s Fleischer Superman shorts on a Colab T4, holding one episode out for testing.</li>
+      <li>Colorizes images, folders or whole videos, and measures throughput in frames per second.</li>
+    </ul>`, actions: [["View code", "https://github.com/ArunaSamhitha/Cartoon-Colorization-Using-CycleGAN"]]},
+  quote: {kicker: "Notes", title: "What I've learned building agents", html: `
+    <ul>
+      <li><b>Retrieval beats a bigger prompt.</b> Pulling only the relevant docs and live data cut prompt size by 59% and made answers more grounded.</li>
+      <li><b>Permissions belong on the server.</b> The agent should never be the thing deciding who's allowed to do what.</li>
+      <li><b>Every tool call needs a timeout.</b> One slow dependency shouldn't take down the whole answer.</li>
+      <li><b>Trace everything.</b> Without traces of retrieval and tool calls, you can't debug or evaluate an agent.</li>
+      <li><b>Not everything should be an LLM.</b> For allergen safety, rules you can audit beat a model you can't.</li>
+    </ul>`, actions: []},
+  colruyt: {kicker: "Colruyt Group · Software Engineer · Feb 2023 – Jul 2024", title: "Payments and self-checkout integration", html: `
+    <ul>
+      <li>15+ RESTful APIs for self-checkout and payment systems, holding sub-100 ms p95 latency under load.</li>
+      <li>Reusable integration services across payment gateways that cut cross-application integration overhead by 35%.</li>
+      <li>Jenkins CI/CD that containerized 12 services with Docker, with health checks and Kibana logging, cutting deployment downtime by 30%.</li>
+      <li>Platform upgrade across 12 production servers at 99.99% availability.</li>
+    </ul>`, actions: []},
+  research: {kicker: "San José State University · Research Assistant · Oct 2025 – Jun 2026", title: "Technology adoption and health outcomes", html: `
+    <p>Built an AI-assisted platform that analyzes links between technology adoption and health outcomes, with statistical models behind decision-support features.</p>
+    <p>React and FastAPI dashboards visualize relationship patterns, model outputs and metrics, with APIs tuned for low-latency inference.</p>`, actions: []},
+  skills: {kicker: "Skills", title: "Tools I work with", html: `
+    <ul>
+      <li><b>AI engineering:</b> Google ADK, LangGraph, LangChain, MCP, agent orchestration, RAG, vector search, evaluation, guardrails, Langfuse</li>
+      <li><b>ML:</b> PyTorch, Hugging Face Transformers, scikit-learn, computer vision, NLP, multimodal models</li>
+      <li><b>Backend &amp; full-stack:</b> Python, SQL, TypeScript, FastAPI, Node.js, React, PostgreSQL</li>
+      <li><b>Cloud &amp; infra:</b> GCP (Vertex AI, BigQuery, GKE), Kubernetes, Docker, Helm, OpenTelemetry, CI/CD</li>
+    </ul>`, actions: []},
+};
+
+const pins = [...document.querySelectorAll(".pin")];
+const dialog = document.getElementById("closeup");
+let board = "all";
+
+function filter() {
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  let shown = 0;
+  for (const pin of pins) {
+    const d = DETAIL[pin.dataset.id];
+    const text = (pin.innerText + " " + d.title + " " + d.html.replace(/<[^>]+>/g, " ")).toLowerCase();
+    const ok = (board === "all" || pin.dataset.boards.split(" ").includes(board)) && (!q || text.includes(q));
+    pin.hidden = !ok;
+    shown += ok;
+  }
+  document.getElementById("empty").hidden = shown > 0;
+}
+
+document.querySelectorAll(".boards button").forEach((b) => b.addEventListener("click", () => {
+  board = b.dataset.board;
+  document.querySelectorAll(".boards button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+  filter();
+}));
+document.getElementById("q").addEventListener("input", filter);
+
+function open(id) {
+  const d = DETAIL[id], pin = pins.find((p) => p.dataset.id === id);
+  if (!d || !pin) return;
+  document.getElementById("cu-art").innerHTML = pin.querySelector(".art").outerHTML;
+  document.getElementById("cu-body").innerHTML = `<span class="kicker">${d.kicker}</span><h2 id="cu-title">${d.title}</h2>${d.html}` +
+    (d.actions.length ? `<div class="actions">${d.actions.map(([t, u], i) => `<a class="btn${i ? " ghost" : ""}" href="${u}" target="_blank" rel="noopener">${t}</a>`).join("")}</div>` : "");
+  if (!dialog.open) dialog.showModal();
+  if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+}
+function close() {
+  if (dialog.open) dialog.close();
+}
+dialog.addEventListener("close", () => { if (location.hash) history.replaceState(null, "", location.pathname + location.search); });
+pins.forEach((p) => p.addEventListener("click", () => open(p.dataset.id)));
+document.getElementById("cu-close").addEventListener("click", close);
+dialog.addEventListener("click", (e) => { if (e.target === dialog) close(); });
+window.addEventListener("hashchange", () => { const id = location.hash.slice(1); id && DETAIL[id] ? open(id) : close(); });
+if (location.hash.slice(1) in DETAIL) open(location.hash.slice(1));
 </script>
 </body>
 </html>
