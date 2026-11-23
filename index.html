@@ -4,474 +4,613 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Aruna Samhitha</title>
-<meta name="description" content="Aruna Samhitha builds AI agents, recommenders and the products around them.">
+<meta name="description" content="Aruna Samhitha: engineer of AI agents, recommenders and accessible interfaces.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Fraunces:ital,opsz,wght,SOFT,WONK@1,9..144,400..800,100,1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: kinetic hero → sticky glass toolbar → JS masonry pinboard (FLIP reflow) → morphing close-up with "More like this". */
+/* Layout: playful sticker hero (draggable) → tilted ticker → sticky board filters → JS masonry of live-demo pins → morphing close-up.
+   Palette: candy brights on lavender paper; every text/background pair checked for WCAG AA. */
 @property --pos { syntax: "<percentage>"; inherits: true; initial-value: 50%; }
 :root{
-  --bg:#F3F2EF; --bg2:#EAE8E3; --pin:#FFFFFF; --ink:#0F0F10; --ink2:#3B3A37; --muted:#77746E; --rule:rgba(15,15,16,.09);
-  --accent:#F0362A; --accent-ink:#FFFFFF; --glass:rgba(243,242,239,.72);
-  --c1:#FFD9CC; --c2:#D4E2FF; --c3:#D3F0DE; --c4:#EBDDFF; --c5:#FFEDB8; --c6:#CFEFF3;
-  --shadow:0 1px 2px rgba(15,15,16,.06),0 8px 24px -8px rgba(15,15,16,.16);
-  --shadow-hi:0 2px 6px rgba(15,15,16,.08),0 30px 60px -20px rgba(15,15,16,.35);
+  --bg:#F6F3FF; --bg2:#ECE6FF; --surface:#FFFFFF; --ink:#1A1033; --ink2:#3A2F57; --muted:#5E5578; --rule:rgba(26,16,51,.1);
+  --accent:#C2185B; --pop:#FF6FA5;
+  --sun:#FFD23F; --lime:#C8F560; --sky:#7DD8FF; --pink:#FF6FA5; --mint:#6EE7B7; --peach:#FFB38A; --lilac:#C9B8FF;
+  --blue:#3448FF; --violet:#6B3FF2; --tomato:#FF5A47;
+  --glass:rgba(246,243,255,.74);
+  --shadow:0 1px 0 rgba(26,16,51,.04),0 10px 30px -12px rgba(52,26,120,.28);
+  --shadow-hi:0 2px 0 rgba(26,16,51,.05),0 30px 60px -18px rgba(52,26,120,.45);
   --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --serif:"Fraunces",ui-serif,Georgia,serif;
   --body:"Geist",ui-sans-serif,system-ui,-apple-system,sans-serif;
   --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  --ease:cubic-bezier(.2,.8,.2,1);
+  --ease:cubic-bezier(.2,.8,.2,1); --spring:cubic-bezier(.34,1.56,.64,1);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0D0D0F; --bg2:#151518; --pin:#18181B; --ink:#F4F3F0; --ink2:#C9C7C1; --muted:#8E8B84; --rule:rgba(255,255,255,.08);
-  --accent:#FF5240; --accent-ink:#0D0D0F; --glass:rgba(13,13,15,.7);
-  --c1:#3A1E18; --c2:#18233D; --c3:#14301F; --c4:#28193E; --c5:#3A2E10; --c6:#0F3036;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -8px rgba(0,0,0,.6);
-  --shadow-hi:0 2px 6px rgba(0,0,0,.5),0 30px 60px -20px rgba(0,0,0,.8); color-scheme:dark}}
+  --bg:#0F0A1F; --bg2:#1B1433; --surface:#1B1433; --ink:#F4F1FF; --ink2:#D3CCEB; --muted:#A79FC4; --rule:rgba(255,255,255,.09);
+  --accent:#FF6FA5; --glass:rgba(15,10,31,.72);
+  --shadow:0 1px 0 rgba(0,0,0,.3),0 10px 30px -12px rgba(0,0,0,.7); --shadow-hi:0 30px 60px -18px rgba(0,0,0,.85); color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0D0D0F; --bg2:#151518; --pin:#18181B; --ink:#F4F3F0; --ink2:#C9C7C1; --muted:#8E8B84; --rule:rgba(255,255,255,.08);
-  --accent:#FF5240; --accent-ink:#0D0D0F; --glass:rgba(13,13,15,.7);
-  --c1:#3A1E18; --c2:#18233D; --c3:#14301F; --c4:#28193E; --c5:#3A2E10; --c6:#0F3036;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -8px rgba(0,0,0,.6);
-  --shadow-hi:0 2px 6px rgba(0,0,0,.5),0 30px 60px -20px rgba(0,0,0,.8); color-scheme:dark}
+  --bg:#0F0A1F; --bg2:#1B1433; --surface:#1B1433; --ink:#F4F1FF; --ink2:#D3CCEB; --muted:#A79FC4; --rule:rgba(255,255,255,.09);
+  --accent:#FF6FA5; --glass:rgba(15,10,31,.72);
+  --shadow:0 1px 0 rgba(0,0,0,.3),0 10px 30px -12px rgba(0,0,0,.7); --shadow-hi:0 30px 60px -18px rgba(0,0,0,.85); color-scheme:dark}
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font:15.5px/1.55 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip}
 button,input{font:inherit;color:inherit}
 a{color:inherit}
-::selection{background:var(--accent);color:var(--accent-ink)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:14px}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
-/* film grain */
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.05;mix-blend-mode:multiply;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-:root[data-theme="dark"] body::after{mix-blend-mode:screen;opacity:.04}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body::after{mix-blend-mode:screen;opacity:.04}}
+::selection{background:var(--sun);color:#1A1033}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:12px}
+:root[data-theme="dark"] :focus-visible{outline-color:var(--sun)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :focus-visible{outline-color:var(--sun)}}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bg)}
 .wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.inner{max-width:1400px;margin:0 auto}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;text-decoration:none}
+.skip:focus{top:12px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+em.f{font-family:var(--serif);font-style:italic;font-weight:500;font-variation-settings:"SOFT" 100,"WONK" 1;letter-spacing:-.01em}
+
+/* ---------- top nav ---------- */
+.nav{position:relative;z-index:5;padding-block:18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font:800 22px var(--display);letter-spacing:-.03em;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.logo i{display:inline-block;width:14px;height:14px;border-radius:50%;background:conic-gradient(var(--pink),var(--sun),var(--lime),var(--sky),var(--violet),var(--pink));animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(1turn)}}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-links a{text-decoration:none;font-weight:600;padding:8px 12px;border-radius:999px}
+.nav-links a:hover{background:var(--bg2)}
+.iconbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;min-width:40px;border:0;border-radius:999px;background:var(--surface);box-shadow:var(--shadow);padding:0 12px;cursor:pointer;color:var(--ink2)}
+.kbd{font:500 11px var(--mono);border:1px solid var(--rule);border-radius:6px;padding:1px 6px}
+@media (max-width:640px){.nav-links a{display:none}.iconbtn .label,.iconbtn .kbd{display:none}}
 
 /* ---------- hero ---------- */
-.hero{position:relative;padding-block:clamp(40px,8vw,96px) clamp(28px,5vw,56px);overflow:hidden;isolation:isolate}
-.hero-inner{max-width:1400px;margin:0 auto;position:relative}
-.topline{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font:500 13px var(--mono);color:var(--muted);margin-bottom:28px}
-.status-pill{display:inline-flex;align-items:center;gap:8px;color:var(--ink);background:var(--pin);border-radius:999px;padding:6px 12px 6px 10px;box-shadow:var(--shadow)}
-.status-pill i{width:8px;height:8px;border-radius:50%;background:#22B566;box-shadow:0 0 0 0 rgba(34,181,102,.6);animation:ping 2s infinite}
-@keyframes ping{70%{box-shadow:0 0 0 8px rgba(34,181,102,0)}100%{box-shadow:0 0 0 0 rgba(34,181,102,0)}}
-h1{margin:0;font:800 clamp(48px,10.5vw,152px)/.86 var(--display);font-stretch:80%;letter-spacing:-.045em;max-width:12ch;text-wrap:balance}
-h1 .roll{display:inline-grid;vertical-align:bottom;height:.92em;overflow:hidden;color:var(--accent)}
-h1 .roll span{grid-area:1/1;transform:translateY(105%);transition:transform .7s var(--ease),opacity .7s;opacity:0;white-space:nowrap}
-h1 .roll span.on{transform:none;opacity:1}
-h1 .roll span.out{transform:translateY(-105%);opacity:0}
-.lede{margin:26px 0 0;font-size:clamp(16px,1.6vw,19px);max-width:52ch;color:var(--ink2)}
+.hero{position:relative;isolation:isolate;overflow:hidden;overflow:clip;padding-bottom:clamp(40px,6vw,80px)}
+.mesh{position:absolute;inset:-20% -10% 0;z-index:-2;pointer-events:none;filter:blur(70px) saturate(1.15);opacity:.75}
+.mesh span{position:absolute;border-radius:50%;width:42vw;height:42vw;max-width:620px;max-height:620px;animation:drift 18s ease-in-out infinite alternate}
+.mesh span:nth-child(1){background:var(--pink);left:-6%;top:6%}
+.mesh span:nth-child(2){background:var(--sky);right:-4%;top:-4%;animation-delay:-6s}
+.mesh span:nth-child(3){background:var(--sun);left:34%;top:30%;animation-delay:-11s;opacity:.8}
+.mesh span:nth-child(4){background:var(--lilac);right:10%;bottom:-10%;animation-delay:-3s}
+@keyframes drift{to{transform:translate(6vw,4vh) scale(1.15)}}
+:root[data-theme="dark"] .mesh{opacity:.42}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mesh{opacity:.42}}
+.hero-grid{position:relative;padding-top:clamp(24px,5vw,64px)}
+.hi{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font:500 13px var(--mono);color:var(--ink2)}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border-radius:999px;padding:7px 13px 7px 11px;box-shadow:var(--shadow);font-weight:500}
+.pill i{width:9px;height:9px;border-radius:50%;background:#16A34A;box-shadow:0 0 0 0 rgba(22,163,74,.55);animation:ping 2s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 9px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}
+.name{margin:22px 0 0;font:800 clamp(64px,14.5vw,220px)/.82 var(--display);font-stretch:78%;letter-spacing:-.055em;user-select:none}
+.name .w{display:block;white-space:nowrap}
+.name .ch{display:inline-block;transition:transform .45s var(--spring),color .2s;transform-origin:50% 80%}
+.name .ch:hover{transform:translateY(-.12em) rotate(-6deg) scale(1.06);color:var(--c)}
+.name .w:nth-child(2){padding-left:clamp(0px,8vw,140px)}
+.tag{margin:26px 0 0;font:500 clamp(22px,3.2vw,40px)/1.15 var(--body);letter-spacing:-.02em;max-width:24ch;text-wrap:balance}
+.tag em.f{color:var(--accent)}
+.lede{margin:18px 0 0;max-width:56ch;color:var(--ink2);font-size:clamp(15.5px,1.4vw,18px)}
 .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
-.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:12px 20px;font-weight:600;cursor:pointer;text-decoration:none;
-  background:var(--ink);color:var(--bg);transition:transform .25s var(--ease),box-shadow .25s}
-.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-hi)}
-.btn.red{background:var(--accent);color:var(--accent-ink)}
-.btn.ghost{background:var(--pin);color:var(--ink);box-shadow:var(--shadow)}
-.kbd{font:500 11px var(--mono);border:1px solid var(--rule);border-radius:6px;padding:1px 6px;opacity:.75}
-/* floating stat pins */
-.floaters{position:absolute;inset:0;pointer-events:none;z-index:-1}
-.fl{position:absolute;background:var(--pin);border-radius:18px;box-shadow:var(--shadow-hi);padding:14px 16px;display:grid;gap:2px;min-width:150px;
-  transform:translate3d(calc(var(--mx,0)*var(--d)*1px),calc(var(--my,0)*var(--d)*1px),0) rotate(var(--r));transition:transform .6s var(--ease);animation:bob 7s ease-in-out infinite;animation-delay:var(--del)}
-.fl b{font:800 34px/1 var(--display);letter-spacing:-.03em}
-.fl span{font:500 12px var(--mono);color:var(--muted)}
-.fl::before{content:"";position:absolute;top:-6px;left:50%;width:12px;height:12px;border-radius:50%;background:var(--accent);transform:translateX(-50%);box-shadow:0 2px 4px rgba(0,0,0,.25)}
-@keyframes bob{50%{translate:0 -10px}}
-@media (max-width:1100px){.fl:nth-child(n+3){display:none}}
-@media (max-width:760px){.floaters{display:none}}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:13px 20px;font-weight:700;cursor:pointer;text-decoration:none;
+  background:var(--ink);color:var(--bg);box-shadow:var(--shadow);transition:transform .3s var(--spring),box-shadow .3s}
+.btn:hover{transform:translateY(-3px) rotate(-1deg);box-shadow:var(--shadow-hi)}
+.btn.pink{background:var(--pink);color:#1A1033}
+.btn.light{background:var(--surface);color:var(--ink)}
+/* stickers */
+.stickers{position:absolute;inset:0;z-index:2;pointer-events:none}
+.sticker{position:absolute;pointer-events:auto;cursor:grab;touch-action:none;user-select:none;display:inline-flex;align-items:center;gap:6px;
+  font:800 clamp(13px,1.15vw,16px)/1 var(--display);letter-spacing:-.01em;padding:11px 15px;border-radius:999px;color:#1A1033;
+  background:var(--bgc);box-shadow:0 2px 0 rgba(26,16,51,.25),0 14px 28px -12px rgba(26,16,51,.5);transform:rotate(var(--r));transition:transform .35s var(--spring),box-shadow .3s;border:2.5px solid #1A1033}
+.sticker:hover{transform:rotate(calc(var(--r) * -1)) scale(1.08)}
+.sticker.dragging{cursor:grabbing;transform:rotate(0) scale(1.14);box-shadow:0 30px 50px -16px rgba(26,16,51,.6);transition:none;z-index:9}
+.sticker.round{width:110px;height:110px;border-radius:50%;justify-content:center;text-align:center;flex-direction:column;gap:2px;padding:0}
+.sticker.round b{font-size:30px;letter-spacing:-.03em}
+.sticker.round small{font:600 10.5px/1.15 var(--mono);max-width:80px}
+.sticker.white{--bgc:#fff}
+.hint{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:14px;font:500 12px var(--mono);color:var(--muted)}
+@media (max-width:1100px){.sticker[data-hide-small]{display:none}}
+@media (max-width:820px){.stickers{position:relative;inset:auto;display:flex;flex-wrap:wrap;gap:10px;margin:26px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+  .sticker{position:relative;left:auto!important;top:auto!important;right:auto!important;cursor:default}.sticker.round{display:none}.sticker[data-hide-small]{display:inline-flex}.hint{display:none}}
 
-/* ---------- toolbar ---------- */
-.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;padding-block:10px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--rule)}
-.bar-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}
-.boards{position:relative;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0}
+/* ---------- ticker ---------- */
+.ticker-wrap{position:relative;z-index:3;overflow:hidden;padding-block:18px;margin-top:-26px}
+.ticker{background:var(--ink);color:var(--bg);transform:rotate(-1.6deg);width:110%;margin-left:-5%;padding:14px 0;overflow:hidden;box-shadow:var(--shadow-hi)}
+.ticker .belt{display:flex;gap:28px;width:max-content;animation:belt 34s linear infinite;font:800 clamp(18px,2.2vw,28px)/1 var(--display);letter-spacing:-.01em;text-transform:uppercase}
+.ticker .belt span{display:inline-flex;gap:28px;align-items:center}
+.ticker .belt i{font-style:normal;color:var(--sun)}
+@keyframes belt{to{transform:translateX(-50%)}}
+.ticker:hover .belt{animation-play-state:paused}
+
+/* ---------- section heads ---------- */
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px;padding-top:clamp(56px,7vw,96px)}
+.sec-head h2{margin:0;font:800 clamp(40px,6vw,84px)/.9 var(--display);font-stretch:80%;letter-spacing:-.045em}
+.sec-head h2 em.f{color:var(--accent);font-weight:500}
+.sec-head p{margin:0;color:var(--muted);max-width:44ch}
+
+/* ---------- filter bar ---------- */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-top:22px;padding-block:10px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.5);-webkit-backdrop-filter:blur(18px) saturate(1.5)}
+.boards{position:relative;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0;max-width:max-content;padding:4px;background:var(--surface);border-radius:999px;box-shadow:var(--shadow)}
 .boards::-webkit-scrollbar{display:none}
-.boards button{position:relative;z-index:1;flex:none;border:0;background:none;padding:9px 15px;border-radius:999px;font-weight:600;cursor:pointer;color:var(--ink2);transition:color .3s}
-.boards button[aria-pressed="true"]{color:var(--bg)}
-.boards .count{font:500 11px var(--mono);opacity:.6;margin-left:4px}
-.indicator{position:absolute;z-index:0;top:0;height:100%;border-radius:999px;background:var(--ink);transition:transform .45s var(--ease),width .45s var(--ease)}
-.tools{display:flex;gap:8px;align-items:center}
-.iconbtn{display:inline-flex;align-items:center;gap:8px;height:40px;border:0;border-radius:999px;background:var(--pin);box-shadow:var(--shadow);padding:0 14px;cursor:pointer;color:var(--ink2)}
-.iconbtn.round{width:40px;padding:0;justify-content:center}
-@media (max-width:620px){.iconbtn .label,.iconbtn .kbd{display:none}.iconbtn{padding:0;width:40px;justify-content:center}}
+.boards button{position:relative;z-index:1;flex:none;border:0;background:none;padding:8px 14px;border-radius:999px;font-weight:600;cursor:pointer;color:var(--ink2);transition:color .3s}
+.boards button[aria-pressed="true"]{color:#1A1033}
+.boards .count{font:500 11px var(--mono);opacity:.7;margin-left:4px}
+.indicator{position:absolute;z-index:0;top:4px;height:calc(100% - 8px);border-radius:999px;background:var(--ibg,var(--sun));transition:transform .5s var(--spring),width .45s var(--ease),background .4s}
 
 /* ---------- board ---------- */
-main{position:relative;padding-block:22px 80px}
-.spot{position:absolute;inset:0;pointer-events:none;background:radial-gradient(500px circle at var(--sx,50%) var(--sy,30%),color-mix(in srgb,var(--accent) 9%,transparent),transparent 60%);transition:opacity .4s}
-.board{position:relative;max-width:1400px;margin:0 auto;transition:height .5s var(--ease)}
-.pin{position:absolute;top:0;left:0;width:var(--w,280px);border:0;padding:0;background:none;text-align:left;cursor:pointer;color:inherit;
-  transform:translate3d(var(--x,0),var(--y,0),0);transition:transform .6s var(--ease),opacity .4s,filter .4s;will-change:transform}
-.pin.gone{opacity:0;pointer-events:none;filter:blur(6px)}
-.board.ready .pin{animation:none}
-.art{container-type:inline-size;position:relative;border-radius:22px;overflow:hidden;background:var(--pin);box-shadow:var(--shadow);transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .4s var(--ease),box-shadow .4s;isolation:isolate}
-.pin:hover .art{box-shadow:var(--shadow-hi)}
-.art::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:radial-gradient(400px circle at var(--gx,50%) var(--gy,0%),rgba(255,255,255,.35),transparent 45%);opacity:0;transition:opacity .3s;mix-blend-mode:soft-light}
+main{position:relative;padding-block:0 40px}
+main:focus{outline:none}
+.board{position:relative;margin-top:22px;transition:height .5s var(--ease)}
+.pin{position:absolute;top:0;left:0;width:var(--w,280px);transform:translate3d(var(--x,0),var(--y,0),0);transition:transform .65s var(--ease),opacity .4s,filter .4s;will-change:transform}
+.pin.gone{opacity:0;pointer-events:none;filter:blur(6px);visibility:hidden;transition:transform .65s var(--ease),opacity .4s,filter .4s,visibility 0s .4s}
+.art{container-type:inline-size;position:relative;border-radius:26px;overflow:hidden;box-shadow:var(--shadow);color:#1A1033;
+  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .45s var(--ease),box-shadow .4s;isolation:isolate}
+.pin:hover .art,.pin:focus-within .art{box-shadow:var(--shadow-hi)}
+.art::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(380px circle at var(--gx,50%) var(--gy,0%),rgba(255,255,255,.45),transparent 45%);opacity:0;transition:opacity .3s;mix-blend-mode:soft-light}
 .pin:hover .art::after{opacity:1}
-.save{position:absolute;z-index:3;top:12px;right:12px;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px;opacity:0;transform:translateY(-6px);transition:.25s var(--ease)}
-.pin:hover .save,.pin:focus-visible .save{opacity:1;transform:none}
-.cap{padding:10px 6px 2px;display:grid;gap:3px}
-.cap b{font-weight:600;font-size:15px;line-height:1.3;text-wrap:balance}
-.cap span{color:var(--muted);font-size:13px}
-.tagline{display:flex;gap:6px;flex-wrap:wrap}
-.tagline em{font:500 11px var(--mono);font-style:normal;background:var(--bg2);border-radius:999px;padding:2px 8px;color:var(--ink2)}
+.chip-open{position:absolute;z-index:3;top:12px;right:12px;background:#1A1033;color:#fff;border-radius:999px;padding:7px 13px;font-weight:700;font-size:13px;opacity:0;transform:translateY(-6px) scale(.9);transition:.3s var(--spring);pointer-events:none}
+.pin:hover .chip-open,.pin:focus-within .chip-open{opacity:1;transform:none}
+.cap{padding:11px 6px 2px;display:grid;gap:5px}
+.cap h3{margin:0;font-size:15.5px;line-height:1.3;font-weight:650;text-wrap:balance}
+.cap h3 button{all:unset;cursor:pointer}
+.cap h3 button::after{content:"";position:absolute;inset:0;z-index:1;border-radius:26px}
+.cap h3 button:focus-visible::after{outline:3px solid var(--blue);outline-offset:4px}
+:root[data-theme="dark"] .cap h3 button:focus-visible::after{outline-color:var(--sun)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cap h3 button:focus-visible::after{outline-color:var(--sun)}}
+.cap > span{color:var(--muted);font-size:13px}
+.tags{display:flex;gap:5px;flex-wrap:wrap}
+.tags em{font:500 11px var(--mono);font-style:normal;background:var(--bg2);border-radius:999px;padding:2px 8px;color:var(--ink2)}
+.above{z-index:2}
 .empty{text-align:center;color:var(--muted);padding:60px 0}
-@media (hover:none){.save{display:none}}
+@media (hover:none){.chip-open{display:none}}
 
-/* pin art pieces (animations only run while visible: .live) */
-.pad{padding:clamp(14px,7cqi,20px);display:grid;gap:12px}
-.kick{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+/* pin art pieces */
+.pad{padding:20px;display:grid;gap:12px}
+.kick{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase}
 .art *{animation-play-state:paused}
-.pin.live .art *{animation-play-state:running}
+.pin.on .art *{animation-play-state:running}
 
-.about{background:var(--c1);min-height:340px;align-content:end}
-.blob{position:absolute;inset:-30%;z-index:-1;background:conic-gradient(from 0deg,var(--accent),#FFB547,#8B5CF6,#22B5A8,var(--accent));filter:blur(50px);opacity:.45;animation:spin 14s linear infinite}
-@keyframes spin{to{transform:rotate(1turn)}}
-.mono{font:800 clamp(56px,40cqi,120px)/.8 var(--display);font-stretch:75%;letter-spacing:-.06em;color:var(--ink)}
+.about{background:var(--sun);min-height:330px;align-content:end}
+.face{width:min(52cqi,150px);aspect-ratio:1;justify-self:start;margin-bottom:6px;animation:wob 4s ease-in-out infinite}
+@keyframes wob{50%{transform:rotate(-6deg) translateY(-4px)}}
+.face .blink{transform-origin:50% 50%;transform-box:fill-box;animation:blink 5s infinite}
+@keyframes blink{0%,46%,50%,100%{transform:scaleY(1)}48%{transform:scaleY(.1)}}
+.about h4{margin:0;font:800 clamp(26px,13cqi,38px)/.95 var(--display);letter-spacing:-.03em}
 .about p{margin:0;font-weight:500}
 
-.trace{background:var(--c2)}
-.big{font:800 clamp(40px,26cqi,76px)/.85 var(--display);font-stretch:80%;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.trace{background:var(--sky)}
+.big{font:800 clamp(44px,30cqi,84px)/.85 var(--display);font-stretch:78%;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
 .wf{display:grid;gap:7px;font:500 11px var(--mono)}
-.wf div{display:grid;grid-template-columns:72px 1fr;gap:8px;align-items:center}
-.wf s{display:block;height:10px;border-radius:4px;background:var(--ink);text-decoration:none;transform-origin:left;margin-left:var(--o);width:var(--w);animation:grow 3.2s var(--ease) infinite;animation-delay:var(--d)}
+.wf div{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center}
+.wf s{display:block;height:11px;border-radius:4px;background:#1A1033;text-decoration:none;transform-origin:left;margin-left:var(--o);width:var(--w);animation:grow 3.4s var(--ease) infinite;animation-delay:var(--d)}
+.wf div:nth-child(4) s{background:var(--blue)}
 @keyframes grow{0%{transform:scaleX(0)}35%,85%{transform:scaleX(1)}100%{transform:scaleX(1);opacity:0}}
 
-.race{background:var(--c3)}
+.race{background:var(--lime)}
 .lanes{display:grid;gap:6px;font:500 11px var(--mono)}
 .lane{display:grid;grid-template-columns:58px 1fr;gap:8px;align-items:center}
-.track{height:14px;border-radius:5px;background:color-mix(in srgb,var(--ink) 8%,transparent);position:relative;overflow:hidden}
-.track s{position:absolute;top:0;bottom:0;border-radius:5px;text-decoration:none;background:var(--ink);transform-origin:left}
-.seq .track s{left:var(--start);width:var(--len);animation:seq 4.8s linear infinite}
-.par .track s{left:0;width:var(--plen);animation:par 4.8s linear infinite;background:var(--accent)}
-@keyframes seq{0%{transform:scaleX(0)}to{transform:scaleX(1)}}
+.track{height:14px;border-radius:5px;background:rgba(26,16,51,.12);position:relative;overflow:hidden}
+.track s{position:absolute;top:0;bottom:0;border-radius:5px;text-decoration:none;background:#1A1033;transform-origin:left}
+.seq .track s{left:var(--start);width:var(--len);animation:fill 4.8s linear infinite}
+.par .track s{left:0;width:var(--plen);animation:par 4.8s linear infinite;background:var(--violet)}
+@keyframes fill{0%{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes par{0%{transform:scaleX(0)}42%,100%{transform:scaleX(1)}}
-.race .row{display:flex;justify-content:space-between;align-items:baseline;font:500 12px var(--mono)}
-.race .row b{font:800 clamp(18px,9cqi,26px) var(--display);letter-spacing:-.02em}
+.row{display:flex;justify-content:space-between;align-items:baseline;font:500 12px var(--mono)}
+.row b{font:800 clamp(18px,9cqi,26px) var(--display);letter-spacing:-.02em}
 
-.scan{background:var(--c5);font:500 12.5px/1.75 var(--mono);position:relative}
-.scan .line{position:absolute;left:0;right:0;height:2px;background:var(--accent);box-shadow:0 0 18px 4px color-mix(in srgb,var(--accent) 50%,transparent);top:20px;animation:scan 3.6s ease-in-out infinite}
+.scan{background:var(--peach);font:500 12.5px/1.75 var(--mono);position:relative}
+.scan .line{position:absolute;left:0;right:0;height:3px;background:#1A1033;top:46px;animation:scan 3.6s ease-in-out infinite}
 @keyframes scan{0%{top:46px}60%{top:calc(100% - 64px)}100%{top:calc(100% - 64px);opacity:0}}
 .scan mark{background:transparent;color:inherit;border-radius:3px;padding:0 2px;animation:hl 3.6s infinite;animation-delay:var(--d)}
-@keyframes hl{0%,10%{background:transparent;color:inherit}18%,92%{background:var(--accent);color:var(--accent-ink)}100%{background:transparent}}
-.scan .warn{text-decoration:underline wavy var(--accent);text-underline-offset:4px}
-.verdict{display:inline-flex;align-self:start;justify-self:start;gap:8px;align-items:center;font:700 14px var(--body);background:var(--ink);color:var(--bg);border-radius:999px;padding:7px 14px;animation:pop 3.6s infinite}
+@keyframes hl{0%,10%{background:transparent;color:inherit}18%,92%{background:#1A1033;color:#fff}100%{background:transparent}}
+.scan .warn{text-decoration:underline wavy #1A1033;text-underline-offset:4px}
+.verdict{display:inline-flex;justify-self:start;gap:8px;align-items:center;font:700 14px var(--body);background:#1A1033;color:#fff;border-radius:999px;padding:7px 14px;animation:pop 3.6s infinite}
 @keyframes pop{0%,55%{transform:scale(.6);opacity:0}65%,95%{transform:none;opacity:1}100%{opacity:0}}
 
-.toon{aspect-ratio:4/5;--pos:50%;animation:sweep 6s ease-in-out infinite}
-.pin.touched .toon,.toon.touched{animation:none}
+.a11y{background:var(--violet);color:#fff}
+.doc{background:#fff;color:#1A1033;border-radius:14px;padding:14px;display:grid;gap:9px;font-size:13px;position:relative}
+.doc .h{display:flex;gap:8px;align-items:center;font:800 17px var(--display)}
+.doc code{font:600 10px var(--mono);background:#1A1033;color:#fff;border-radius:5px;padding:2px 5px;animation:appear 6s infinite}
+@keyframes appear{0%,40%{opacity:0;transform:scale(.6)}50%,95%{opacity:1;transform:none}100%{opacity:0}}
+.doc .lowc{animation:fixc 6s infinite}
+@keyframes fixc{0%,40%{color:#D9D4E4}50%,95%{color:#1A1033}100%{color:#D9D4E4}}
+.doc .img{display:flex;gap:10px;align-items:center}
+.doc .img i{width:46px;height:34px;border-radius:6px;background:linear-gradient(135deg,var(--sky),var(--mint));flex:none}
+.score{display:flex;justify-content:space-between;align-items:center;font:600 12px var(--mono)}
+.score b{font:800 clamp(22px,11cqi,30px) var(--display);letter-spacing:-.02em}
+.ratio{display:grid}
+.ratio > *{grid-area:1/1;justify-self:end}
+.ratio .bad{animation:swapA 6s infinite}
+.ratio .good{animation:swapB 6s infinite}
+@keyframes swapA{0%,40%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
+@keyframes swapB{0%,40%{opacity:0}50%,95%{opacity:1}100%{opacity:0}}
+
+.toon{aspect-ratio:4/5;--pos:50%;animation:sweep 6s ease-in-out infinite;background:#5BA8E6}
+.toon.touched{animation:none}
 @keyframes sweep{0%,100%{--pos:18%}50%{--pos:82%}}
 .toon svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .toon .gray{clip-path:inset(0 calc(100% - var(--pos)) 0 0);filter:grayscale(1) contrast(1.05)}
-.toon .handle{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.15);transform:translateX(-1px);pointer-events:none}
-.toon .handle::after{content:"⟷";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#fff;color:#111;display:grid;place-items:center;font-size:16px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
-.toon input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
-.toon .tag{position:absolute;bottom:12px;font:600 11px var(--mono);background:rgba(255,255,255,.92);color:#111;border-radius:999px;padding:4px 10px;pointer-events:none}
+.toon .handle{position:absolute;top:0;bottom:0;left:var(--pos);width:3px;background:#fff;transform:translateX(-1.5px);pointer-events:none}
+.toon .handle::after{content:"⟷";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;background:#fff;color:#1A1033;display:grid;place-items:center;font-size:16px;font-weight:700;border:2.5px solid #1A1033}
+.toon input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0;z-index:4}
+.toon:has(input:focus-visible){outline:3px solid var(--blue);outline-offset:3px}
+.toon .lbl{position:absolute;bottom:12px;z-index:3;font:600 11px var(--mono);background:#fff;color:#1A1033;border-radius:999px;padding:4px 10px;pointer-events:none;border:2px solid #1A1033}
 
-.recs{background:var(--c4)}
-.mini{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;height:150px}
-.mini i{border-radius:8px;background:var(--t);animation:shuffle 5s var(--ease) infinite;animation-delay:var(--d)}
-@keyframes shuffle{0%,40%{transform:none}50%{transform:translateY(-6px) scale(.92);opacity:.5}60%,100%{transform:none;opacity:1}}
-.pipeline{display:flex;gap:6px;flex-wrap:wrap;font:500 11px var(--mono)}
-.pipeline span{background:var(--pin);border-radius:999px;padding:3px 9px}
-.wip{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--mono);color:var(--accent)}
-.wip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;animation:ping 2s infinite}
+.recs{background:var(--mint)}
+.mini{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:44px;gap:6px}
+.mini i{border-radius:9px;background:var(--t);border:2px solid #1A1033;animation:shuffle 5s var(--spring) infinite;animation-delay:var(--d)}
+@keyframes shuffle{0%,40%{transform:none}50%{transform:translateY(-8px) rotate(-4deg) scale(.9)}60%,100%{transform:none}}
+.chips{display:flex;gap:6px;flex-wrap:wrap;font:500 11px var(--mono)}
+.chips span{background:#fff;border-radius:999px;padding:3px 9px;color:#1A1033}
+.wip{display:inline-flex;align-items:center;gap:6px;font:700 12px var(--mono)}
+.wip::before{content:"";width:8px;height:8px;border-radius:50%;background:#1A1033;animation:blinkdot 1.6s infinite}
+@keyframes blinkdot{50%{opacity:.25}}
 
-.quote{background:var(--ink);color:var(--bg)}
-.quote p{margin:0;font:700 clamp(17px,8.5cqi,25px)/1.12 var(--display);letter-spacing:-.015em;text-wrap:balance}
-.quote p mark{background:var(--accent);color:var(--accent-ink);border-radius:4px;padding:0 4px}
+.site{background:var(--pink)}
+.code{background:#1A1033;color:#F4F1FF;border-radius:14px;padding:12px 14px;font:500 11.5px/1.7 var(--mono);overflow:hidden}
+.code .k{color:var(--pink)}.code .s{color:var(--lime)}.code .n{color:var(--sun)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center}
+.stats div{background:#fff;border-radius:12px;padding:8px 4px;border:2px solid #1A1033}
+.stats b{display:block;font:800 clamp(16px,8cqi,22px) var(--display)}
+.stats small{font:500 10px var(--mono)}
 
-.spark{background:var(--c6)}
-.spark svg{width:100%;height:90px;overflow:visible}
-.spark path.l{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-dasharray:400;stroke-dashoffset:400;animation:draw 4s var(--ease) infinite}
-.spark path.a{fill:color-mix(in srgb,var(--ink) 10%,transparent)}
-.spark line{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 4}
-.spark text{font:500 10px var(--mono);fill:var(--accent)}
+.quote{background:#1A1033;color:#fff}
+.quote p{margin:0;font:600 clamp(19px,9.5cqi,28px)/1.12 var(--serif);font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1;text-wrap:balance}
+.quote mark{background:var(--lime);color:#1A1033;border-radius:4px;padding:0 4px;font-style:normal;font-family:var(--display);font-weight:800}
+
+.spark{background:var(--lilac)}
+.spark svg{width:100%;height:84px;overflow:visible}
+.spark path.l{fill:none;stroke:#1A1033;stroke-width:2.5;stroke-dasharray:400;stroke-dashoffset:400;animation:draw 4s var(--ease) infinite}
+.spark path.a{fill:rgba(26,16,51,.12)}
+.spark line{stroke:#1A1033;stroke-width:1.5;stroke-dasharray:4 4}
+.spark text{font:600 10px var(--mono);fill:#1A1033}
 @keyframes draw{0%{stroke-dashoffset:400}60%,100%{stroke-dashoffset:0}}
 .stack{display:flex;flex-wrap:wrap;gap:6px}
-.stack span{background:var(--pin);border-radius:999px;padding:4px 10px;font-size:12.5px;font-weight:500}
-.edu{background:var(--c2)}
-.edu h3,.spark h3{margin:0;font:800 clamp(18px,8cqi,24px)/1.05 var(--display);letter-spacing:-.02em;text-wrap:balance}
-.when{font:500 12px var(--mono);opacity:.7}
+.stack span{background:#fff;border-radius:999px;padding:4px 10px;font-size:12.5px;font-weight:600;color:#1A1033}
+.edu{background:var(--blue);color:#fff}
+.edu h4,.spark h4,.a11y h4{margin:0;font:800 clamp(20px,9.5cqi,28px)/1.02 var(--display);letter-spacing:-.025em;text-wrap:balance}
+.when{font:500 12px var(--mono)}
 
-.marq{background:var(--c3);overflow:hidden;padding-block:22px}
-.marq .belt{display:flex;gap:8px;width:max-content;animation:belt 26s linear infinite}
-.marq .belt+.belt{animation-direction:reverse;margin-top:8px}
-@keyframes belt{to{transform:translateX(-50%)}}
-.marq span{background:var(--pin);border-radius:999px;padding:7px 13px;font-weight:600;font-size:14px;white-space:nowrap}
+.marq{background:var(--tomato);overflow:hidden;padding-block:20px}
 .marq .kick{padding:0 20px 12px}
+.marq .b{display:flex;gap:8px;width:max-content;animation:belt 26s linear infinite}
+.marq .b+.b{animation-direction:reverse;margin-top:8px}
+.marq span{background:#fff;border-radius:999px;padding:7px 13px;font-weight:700;font-size:14px;white-space:nowrap;color:#1A1033;border:2px solid #1A1033}
 
-.contact{background:var(--accent);color:var(--accent-ink)}
-.contact h3{margin:0;font:800 clamp(28px,15cqi,46px)/.9 var(--display);font-stretch:80%;letter-spacing:-.04em}
-.contact .btn{background:var(--accent-ink);color:var(--accent);justify-self:start}
+/* ---------- contact ---------- */
+.contact{position:relative;margin-top:30px;border-radius:40px;background:#1A1033;color:#fff;padding:clamp(28px,6vw,72px);overflow:hidden;isolation:isolate}
+.contact .mesh{opacity:.5;inset:-30%}
+.contact h2{margin:0;font:800 clamp(48px,9vw,140px)/.86 var(--display);font-stretch:78%;letter-spacing:-.05em;max-width:11ch}
+.contact h2 em.f{color:var(--sun);font-weight:500}
+.contact p{max-width:46ch;color:#EDE9FA;font-size:clamp(16px,1.5vw,19px)}
+.contact .btn{background:#fff;color:#1A1033}
+.contact .btn.pink{background:var(--pink)}
+.contact .addr{font:500 15px var(--mono);color:#fff;user-select:all;overflow-wrap:anywhere}
+footer{padding-block:26px 40px;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
 
 /* ---------- close-up ---------- */
-dialog.closeup{border:0;padding:0;border-radius:32px;width:min(1080px,calc(100vw - 24px));max-height:calc(100dvh - 32px);background:var(--pin);color:var(--ink);box-shadow:0 40px 120px rgba(0,0,0,.35);overflow:auto;overscroll-behavior:contain}
-dialog.closeup::backdrop{background:color-mix(in srgb,var(--bg) 40%,rgba(0,0,0,.55));backdrop-filter:blur(8px)}
-dialog.closeup[open]{animation:rise .5s var(--ease)}
-@keyframes rise{from{opacity:0;transform:translateY(24px) scale(.97)}}
+dialog.closeup{border:0;padding:0;border-radius:34px;width:min(1080px,calc(100vw - 24px));max-height:calc(100dvh - 32px);background:var(--surface);color:var(--ink);box-shadow:0 40px 120px rgba(0,0,0,.4);overflow:auto;overscroll-behavior:contain}
+dialog.closeup::backdrop{background:rgba(15,10,31,.55);backdrop-filter:blur(10px)}
+dialog.closeup[open]{animation:rise .55s var(--spring)}
+@keyframes rise{from{opacity:0;transform:translateY(30px) scale(.96)}}
 .cu{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.1fr)}
 .cu-art{padding:18px;position:sticky;top:0;align-self:start}
-.cu-art .art{box-shadow:none;transform:none}
+.cu-art .art{transform:none;box-shadow:none}
 .cu-art .art::after{display:none}
 .cu-body{padding:34px 34px 30px 14px;display:grid;gap:16px;align-content:start;min-width:0}
-.cu-body h2{margin:0;font:800 clamp(30px,3.6vw,44px)/.98 var(--display);font-stretch:85%;letter-spacing:-.03em;text-wrap:balance}
+.cu-body .kick{color:var(--muted)}
+.cu-body h2{margin:0;font:800 clamp(30px,3.8vw,46px)/.96 var(--display);font-stretch:85%;letter-spacing:-.035em;text-wrap:balance}
 .cu-body p{margin:0;max-width:62ch;color:var(--ink2)}
 .cu-body ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
-.cu-body li{position:relative;padding-left:22px;color:var(--ink2)}
-.cu-body li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.cu-body li{position:relative;padding-left:24px;color:var(--ink2)}
+.cu-body li::before{content:"";position:absolute;left:2px;top:.5em;width:11px;height:11px;border-radius:4px;background:var(--dot,var(--pink));transform:rotate(12deg)}
+.cu-body li:nth-child(4n+2){--dot:var(--sky)}.cu-body li:nth-child(4n+3){--dot:var(--sun)}.cu-body li:nth-child(4n){--dot:var(--lime)}
 .cu-body li b{color:var(--ink)}
-.note{font-size:13.5px;color:var(--muted);border-left:2px solid var(--rule);padding-left:12px}
-.close{position:sticky;top:14px;float:right;margin:14px 14px -54px 0;z-index:5;width:42px;height:42px;border-radius:50%;border:0;background:var(--bg2);cursor:pointer;font-size:20px;display:grid;place-items:center;transition:transform .2s}
-.close:hover{transform:rotate(90deg)}
+.note{font-size:13.5px;color:var(--muted);border-left:3px solid var(--sun);padding-left:12px}
+.x{position:sticky;top:14px;float:right;margin:14px 14px -58px 0;z-index:5;width:44px;height:44px;border-radius:50%;border:0;background:var(--bg2);cursor:pointer;font-size:22px;display:grid;place-items:center;transition:transform .3s var(--spring)}
+.x:hover{transform:rotate(90deg) scale(1.08)}
 .more{grid-column:1/-1;padding:8px 24px 28px;border-top:1px solid var(--rule)}
-.more h3{font:800 22px var(--display);margin:18px 0 14px;letter-spacing:-.01em}
+.more h3{font:800 24px var(--display);margin:18px 0 14px;letter-spacing:-.02em}
 .more-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
-.more-row button{border:0;background:var(--bg2);border-radius:18px;padding:14px;text-align:left;cursor:pointer;display:grid;gap:4px;transition:transform .25s var(--ease)}
-.more-row button:hover{transform:translateY(-3px)}
+.more-row button{border:0;border-radius:20px;padding:14px;text-align:left;cursor:pointer;display:grid;gap:4px;color:#1A1033;background:var(--mbg);transition:transform .3s var(--spring)}
+.more-row button:hover{transform:translateY(-4px) rotate(-1deg)}
 .more-row b{font-size:14px}
-.more-row span{font-size:12px;color:var(--muted)}
-@media (max-width:780px){.cu{grid-template-columns:minmax(0,1fr)}.cu-art{position:static}.cu-body{padding:6px 22px 24px}.cu-art .art{max-height:360px}}
+.more-row span{font-size:12px}
+@media (max-width:780px){.cu{grid-template-columns:minmax(0,1fr)}.cu-art{position:static}.cu-body{padding:6px 22px 24px}.cu-art .art{max-height:380px}}
 
-/* ---------- command palette ---------- */
-dialog.palette{border:0;padding:0;border-radius:20px;width:min(560px,calc(100vw - 24px));margin-top:12vh;background:var(--pin);color:var(--ink);box-shadow:0 40px 120px rgba(0,0,0,.35)}
-dialog.palette::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(4px)}
+/* ---------- palette + toast + confetti ---------- */
+dialog.palette{border:0;padding:0;border-radius:22px;width:min(560px,calc(100vw - 24px));margin-top:12vh;background:var(--surface);color:var(--ink);box-shadow:0 40px 120px rgba(0,0,0,.4)}
+dialog.palette::backdrop{background:rgba(15,10,31,.4);backdrop-filter:blur(4px)}
 .pal-in{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--rule)}
 .pal-in input{flex:1;border:0;background:none;outline:none;font-size:17px;min-width:0}
 .pal-list{list-style:none;margin:0;padding:8px;max-height:52vh;overflow:auto}
 .pal-list li{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;cursor:pointer}
 .pal-list li[aria-selected="true"]{background:var(--bg2)}
 .pal-list small{color:var(--muted);font:500 12px var(--mono)}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;opacity:0;transition:.3s var(--ease);z-index:70;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:600;opacity:0;transition:.35s var(--spring);z-index:90;pointer-events:none}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+.confetti{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:95}
 
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation:none!important;transition:none!important}
-  h1 .roll span{transform:none}
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
 </style>
 </head>
 <body style="margin:0">
 
-<section class="hero wrap" id="top">
-  <div class="hero-inner">
-    <div class="topline">
-      <span class="status-pill"><i></i>Open to new-grad SWE, AI &amp; ML roles</span>
-      <span id="clock">San Francisco Bay Area</span>
-      <span>MS CompE · SJSU · Dec 2026</span>
-    </div>
-    <h1>I build AI that <span class="roll" aria-live="polite"><span class="on">ships.</span><span>reasons.</span><span>recommends.</span><span>sees.</span></span></h1>
-    <p class="lede">I'm Aruna. I engineer AI agents, recommender systems and computer vision, plus the full-stack products that put them in front of people. Most recently I built a production agent at Palo Alto Networks that now handles nearly half of a platform's support requests.</p>
-    <div class="cta">
-      <a class="btn red" href="#board">See my work ↓</a>
-      <a class="btn ghost" href="https://github.com/ArunaSamhitha" target="_blank" rel="noopener">GitHub ↗</a>
-      <button class="btn ghost" type="button" id="copy-top">Copy email</button>
-    </div>
-  </div>
-  <div class="floaters" aria-hidden="true" id="floaters">
-    <div class="fl" style="right:4%;top:14%;--r:4deg;--d:18;--del:0s"><b>47%</b><span>support requests self-served</span></div>
-    <div class="fl" style="right:22%;top:56%;--r:-5deg;--d:-12;--del:-2s"><b>26</b><span>tools in one production agent</span></div>
-    <div class="fl" style="right:3%;top:66%;--r:3deg;--d:26;--del:-4s"><b>59%</b><span>faster with parallel agents</span></div>
-    <div class="fl" style="right:30%;top:8%;--r:-3deg;--d:-20;--del:-1s"><b>38</b><span>tests green in CI</span></div>
-  </div>
-</section>
+<a class="skip" href="#work">Skip to work</a>
 
-<nav class="bar wrap" aria-label="Boards">
-  <div class="bar-inner">
-    <div class="boards" id="boards">
-      <span class="indicator" id="indicator" aria-hidden="true"></span>
-      <button type="button" aria-pressed="true" data-board="all">All</button>
-      <button type="button" aria-pressed="false" data-board="agents">AI agents</button>
-      <button type="button" aria-pressed="false" data-board="ml">ML &amp; vision</button>
-      <button type="button" aria-pressed="false" data-board="recsys">RecSys</button>
-      <button type="button" aria-pressed="false" data-board="fullstack">Full-stack</button>
-      <button type="button" aria-pressed="false" data-board="experience">Experience</button>
-    </div>
-    <div class="tools">
-      <button class="iconbtn" type="button" id="open-palette" aria-label="Search">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
-        <span class="label">Search</span><span class="kbd">⌘K</span>
-      </button>
-      <button class="iconbtn round" type="button" id="theme" aria-label="Toggle light or dark theme">
-        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z" fill="currentColor"/></svg>
-      </button>
-    </div>
-  </div>
-</nav>
-
-<main class="wrap" id="board-wrap">
-  <div class="spot" id="spot" aria-hidden="true"></div>
-  <div class="board" id="board">
-
-    <div class="pin" role="button" tabindex="0" data-id="hello" data-boards="experience">
-      <div class="art about pad"><div class="blob"></div><span class="kick">Hello</span><span class="mono">AS</span>
-        <p>AI &amp; software engineer. I care about the plumbing that makes models useful: retrieval, tools, permissions, evaluation.</p></div>
-      <div class="cap"><b>About me</b><span>Start here</span></div>
-    </div>
-
-    <div class="pin" role="button" tabindex="0" data-id="panw" data-boards="agents experience fullstack">
-      <span class="save">Open</span>
-      <div class="art trace pad"><span class="kick">Palo Alto Networks · 2026</span>
-        <span class="big"><span class="count" data-to="47">47</span>%</span>
-        <span style="font-weight:600;margin-top:-6px">of support requests now self-served by an AI agent</span>
-        <div class="wf" aria-hidden="true">
-          <div>identity<s style="--o:0%;--w:14%;--d:0s"></s></div>
-          <div>retrieve<s style="--o:10%;--w:30%;--d:.2s"></s></div>
-          <div>plan<s style="--o:38%;--w:16%;--d:.5s"></s></div>
-          <div>tools ×26<s style="--o:50%;--w:34%;--d:.7s"></s></div>
-          <div>answer<s style="--o:82%;--w:18%;--d:1s"></s></div>
-        </div></div>
-      <div class="cap"><b>Production AI assistant for an observability platform</b><div class="tagline"><em>Google ADK</em><em>MCP</em><em>RAG</em><em>GKE</em></div></div>
-    </div>
-
-    <div class="pin" role="button" tabindex="0" data-id="cartlog" data-boards="agents fullstack">
-      <span class="save">Open</span>
-      <div class="art race pad"><span class="kick">CartLog AI · agents over MCP</span>
-        <div class="row"><span>one by one</span><b>2.6s</b></div>
-        <div class="lanes seq" aria-hidden="true">
-          <div class="lane"><span>research</span><div class="track"><s style="--start:0%;--len:27%"></s></div></div>
-          <div class="lane"><span>ebay</span><div class="track"><s style="--start:27%;--len:35%"></s></div></div>
-          <div class="lane"><span>amazon</span><div class="track"><s style="--start:62%;--len:38%"></s></div></div>
-        </div>
-        <div class="row"><span>in parallel</span><b style="color:var(--accent)">1.1s</b></div>
-        <div class="lanes par" aria-hidden="true">
-          <div class="lane"><span>research</span><div class="track"><s style="--plen:27%"></s></div></div>
-          <div class="lane"><span>ebay</span><div class="track"><s style="--plen:35%"></s></div></div>
-          <div class="lane"><span>amazon</span><div class="track"><s style="--plen:41%"></s></div></div>
-        </div></div>
-      <div class="cap"><b>Snap a product, three agents shop at once</b><div class="tagline"><em>MCP</em><em>FastAPI</em><em>React</em><em>VLM</em></div></div>
-    </div>
-
-    <div class="pin" role="button" tabindex="0" data-id="allergen" data-boards="ml fullstack">
-      <span class="save">Open</span>
-      <div class="art scan pad"><div class="line" aria-hidden="true"></div>
-        <span class="kick" style="font-family:var(--body)">AllergenCheck · scanning label</span>
-        <div>INGREDIENTS: SUGAR, ENRICHED <mark style="--d:.25s">WHEAT FLOUR</mark>, PALM OIL, <mark style="--d:.75s">WHEY</mark>, COCOA, SOY LECITHIN, SALT, NATURAL FLAVORS. <span class="warn">MAY CONTAIN TREE NUTS.</span></div>
-        <span class="verdict">✕ Don't eat · gluten, milk</span></div>
-      <div class="cap"><b>Is this label safe for me?</b><div class="tagline"><em>OCR</em><em>Rule engine</em><em>Docker</em><em>CI</em></div></div>
-    </div>
-
-    <div class="pin" role="button" tabindex="0" data-id="cyclegan" data-boards="ml">
-      <span class="save">Open</span>
-      <div class="art toon">
-        <svg viewBox="0 0 200 250" aria-hidden="true">
-          <rect width="200" height="250" fill="#5BA8E6"/><rect y="170" width="200" height="80" fill="#3E8E4F"/>
-          <circle cx="160" cy="45" r="22" fill="#FFD23F"/>
-          <path d="M30 170 L60 120 L90 170Z" fill="#7A5230"/><path d="M110 170 L150 95 L190 170Z" fill="#8C6239"/>
-          <g transform="translate(100 120)"><path d="M-26 70 L0 -10 L26 70Z" fill="#1E5BD6"/><path d="M-26 70 Q0 40 26 70" fill="#D7263D"/>
-            <circle cy="-26" r="18" fill="#F2C29B"/><path d="M-18 -32 Q0 -52 18 -32 L18 -38 Q0 -60 -18 -38Z" fill="#1A1A1A"/>
-            <path d="M-12 16 L12 16 L0 32Z" fill="#FFD23F"/></g>
-          <g fill="none" stroke="#111" stroke-width="2.5" stroke-linejoin="round"><path d="M30 170 L60 120 L90 170Z"/><path d="M110 170 L150 95 L190 170Z"/><circle cx="160" cy="45" r="22"/><g transform="translate(100 120)"><path d="M-26 70 L0 -10 L26 70Z"/><circle cy="-26" r="18"/></g></g>
-        </svg>
-        <svg viewBox="0 0 200 250" class="gray" aria-hidden="true">
-          <rect width="200" height="250" fill="#5BA8E6"/><rect y="170" width="200" height="80" fill="#3E8E4F"/>
-          <circle cx="160" cy="45" r="22" fill="#FFD23F"/>
-          <path d="M30 170 L60 120 L90 170Z" fill="#7A5230"/><path d="M110 170 L150 95 L190 170Z" fill="#8C6239"/>
-          <g transform="translate(100 120)"><path d="M-26 70 L0 -10 L26 70Z" fill="#1E5BD6"/><path d="M-26 70 Q0 40 26 70" fill="#D7263D"/>
-            <circle cy="-26" r="18" fill="#F2C29B"/><path d="M-18 -32 Q0 -52 18 -32 L18 -38 Q0 -60 -18 -38Z" fill="#1A1A1A"/>
-            <path d="M-12 16 L12 16 L0 32Z" fill="#FFD23F"/></g>
-          <g fill="none" stroke="#111" stroke-width="2.5" stroke-linejoin="round"><path d="M30 170 L60 120 L90 170Z"/><path d="M110 170 L150 95 L190 170Z"/><circle cx="160" cy="45" r="22"/><g transform="translate(100 120)"><path d="M-26 70 L0 -10 L26 70Z"/><circle cy="-26" r="18"/></g></g>
-        </svg>
-        <span class="handle" aria-hidden="true"></span>
-        <span class="tag" style="left:12px">input</span><span class="tag" style="right:12px">CycleGAN</span>
-        <input type="range" min="0" max="100" value="50" aria-label="Drag to compare grayscale input and colorized output" data-slider>
+<header class="hero wrap" id="top">
+  <div class="mesh" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <div class="inner">
+    <nav class="nav" aria-label="Main">
+      <a class="logo" href="#top"><i aria-hidden="true"></i>aruna</a>
+      <div class="nav-links">
+        <a href="#work">Work</a>
+        <a href="#contact">Contact</a>
+        <a href="https://github.com/ArunaSamhitha" target="_blank" rel="noopener">GitHub<span class="sr"> (opens in a new tab)</span></a>
+        <button class="iconbtn" type="button" id="open-palette" aria-label="Search work"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span class="label" aria-hidden="true">Search</span><span class="kbd" aria-hidden="true">⌘K</span></button>
+        <button class="iconbtn" type="button" id="theme" aria-label="Switch light or dark theme"><svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z" fill="currentColor"/></svg></button>
       </div>
-      <div class="cap"><b>Coloring black-and-white cartoons with CycleGAN</b><span>Drag to compare · illustration, not model output</span></div>
-    </div>
+    </nav>
 
-    <div class="pin" role="button" tabindex="0" data-id="pinrec" data-boards="recsys ml">
-      <span class="save">Open</span>
-      <div class="art recs pad"><span class="wip">Building now</span>
-        <div class="mini" aria-hidden="true">
-          <i style="--t:var(--accent);--d:0s;grid-row:span 2"></i><i style="--t:#FFB547;--d:.2s"></i><i style="--t:#8B5CF6;--d:.4s;grid-row:span 2"></i><i style="--t:#22B5A8;--d:.6s"></i>
-          <i style="--t:#3B82F6;--d:.8s"></i><i style="--t:#F472B6;--d:1s"></i>
-        </div>
-        <div class="pipeline"><span>two-tower + CLIP</span><span>Pixie-style walks</span><span>GBDT ranker</span></div></div>
-      <div class="cap"><b>PinRec: a two-stage visual recommender</b><div class="tagline"><em>PyTorch</em><em>RecSys</em><em>FastAPI</em></div></div>
-    </div>
-
-    <div class="pin" role="button" tabindex="0" data-id="notes" data-boards="agents">
-      <div class="art quote pad"><span class="kick">Notes</span><p>A good agent is mostly good <mark>plumbing</mark>: retrieval, permissions, timeouts and traces.</p></div>
-      <div class="cap"><b>What I've learned building agents</b><span>5 lessons</span></div>
-    </div>
-
-    <div class="pin" role="button" tabindex="0" data-id="colruyt" data-boards="experience fullstack">
-      <span class="save">Open</span>
-      <div class="art spark pad"><span class="when">Colruyt Group · 2023–24</span><h3>Payments &amp; self-checkout APIs</h3>
-        <svg viewBox="0 0 260 90" aria-hidden="true"><path class="a" d="M0 70 L20 62 L40 66 L60 52 L80 58 L100 46 L120 54 L140 40 L160 48 L180 38 L200 44 L220 34 L240 40 L260 30 L260 90 L0 90Z"/><path class="l" d="M0 70 L20 62 L40 66 L60 52 L80 58 L100 46 L120 54 L140 40 L160 48 L180 38 L200 44 L220 34 L240 40 L260 30"/><line x1="0" x2="260" y1="18" y2="18"/><text x="2" y="12">p95 budget 100 ms</text></svg>
-        <div class="stack"><span>15+ REST APIs</span><span>99.99% uptime</span><span>−30% downtime</span></div></div>
-      <div class="cap"><b>Software Engineer, Colruyt Group</b><span>Integration · CI/CD · Docker</span></div>
-    </div>
-
-    <div class="pin" role="button" tabindex="0" data-id="research" data-boards="experience ml fullstack">
-      <span class="save">Open</span>
-      <div class="art edu pad"><span class="when">SJSU · 2025–26</span><h3>Technology adoption × health outcomes</h3>
-        <div class="stack"><span>Statistical models</span><span>React</span><span>FastAPI</span></div></div>
-      <div class="cap"><b>Research Assistant, AI &amp; Analytics</b><span>San José State University</span></div>
-    </div>
-
-    <div class="pin" role="button" tabindex="0" data-id="skills" data-boards="agents ml fullstack recsys">
-      <div class="art marq"><div class="kick">Toolbox</div>
-        <div class="belt"><span>Python</span><span>PyTorch</span><span>Google ADK</span><span>MCP</span><span>LangGraph</span><span>RAG</span><span>Hugging Face</span><span>Python</span><span>PyTorch</span><span>Google ADK</span><span>MCP</span><span>LangGraph</span><span>RAG</span><span>Hugging Face</span></div>
-        <div class="belt"><span>FastAPI</span><span>React</span><span>TypeScript</span><span>SQL</span><span>GCP</span><span>Kubernetes</span><span>Docker</span><span>FastAPI</span><span>React</span><span>TypeScript</span><span>SQL</span><span>GCP</span><span>Kubernetes</span><span>Docker</span></div>
+    <div class="hero-grid">
+      <div class="hi"><span class="pill"><i aria-hidden="true"></i>Open to new-grad SWE, full-stack &amp; AI roles</span><span id="clock">San Francisco Bay Area</span></div>
+      <h1 class="name" aria-label="Aruna Samhitha"><span class="w" aria-hidden="true">Aruna</span><span class="w" aria-hidden="true">Samhitha</span></h1>
+      <p class="tag">I build <em class="f">AI products</em> people actually like using, and make sure <em class="f">everyone</em> can use them.</p>
+      <p class="lede">Full-stack and AI engineer finishing my MS in Computer Engineering at San José State (Dec 2026). I've shipped a production agent at Palo Alto Networks, I make university files accessible as a student assistant, and I'm building a Pinterest-style recommender on the side.</p>
+      <div class="cta">
+        <a class="btn pink" href="#work">See the work ↓</a>
+        <button class="btn light" type="button" data-copy>Copy my email</button>
       </div>
-      <div class="cap"><b>Tools I work with</b><span>Skills</span></div>
     </div>
-
-    <div class="pin" role="button" tabindex="0" data-id="contact" data-boards="experience">
-      <div class="art contact pad"><span class="kick">Hiring?</span><h3>Let's build something.</h3>
-        <span class="btn" data-copy>Copy email</span></div>
-      <div class="cap"><b>Get in touch</b><span>arunasamhitha.mutyala@sjsu.edu</span></div>
-    </div>
-
   </div>
-  <p class="empty" id="empty" hidden>Nothing pinned for that yet. Try "agents", "PyTorch" or "OCR".</p>
+
+  <div class="stickers" aria-hidden="true" id="stickers">
+    <span class="sticker" style="--bgc:var(--lime);--r:-6deg;right:7%;top:20%">✦ AI agents</span>
+    <span class="sticker" style="--bgc:var(--sky);--r:5deg;right:24%;top:13%" data-hide-small>RecSys nerd</span>
+    <span class="sticker white" style="--r:-3deg;right:4%;top:43%">♿ a11y advocate</span>
+    <span class="sticker" style="--bgc:var(--peach);--r:7deg;right:26%;top:56%" data-hide-small>ships on Fridays (carefully)</span>
+    <span class="sticker round" style="--bgc:var(--sun);--r:-10deg;right:10%;top:62%"><b>47%</b><small>tickets self-served</small></span>
+    <span class="sticker" style="--bgc:var(--lilac);--r:-4deg;right:13%;top:31%" data-hide-small>React · TS · Python</span>
+  </div>
+  <span class="hint" aria-hidden="true">✋ the stickers are draggable</span>
+</header>
+
+<div class="ticker-wrap" aria-hidden="true"><div class="ticker">
+  <div class="belt">
+    <span>Open to new-grad roles <i>✦</i> AI agents <i>✦</i> Full-stack <i>✦</i> Recommenders <i>✦</i> Accessibility <i>✦</i> Computer vision <i>✦</i></span>
+    <span>Open to new-grad roles <i>✦</i> AI agents <i>✦</i> Full-stack <i>✦</i> Recommenders <i>✦</i> Accessibility <i>✦</i> Computer vision <i>✦</i></span>
+  </div>
+</div></div>
+
+<main class="wrap" id="work" tabindex="-1">
+  <div class="inner">
+    <div class="sec-head"><h2>Things I've <em class="f">made</em></h2><p>A board of projects and jobs. Every pin is a tiny live demo. Open one for the full story.</p></div>
+
+    <div class="bar" role="region" aria-label="Filter work">
+      <div class="boards" id="boards">
+        <span class="indicator" id="indicator" aria-hidden="true"></span>
+        <button type="button" aria-pressed="true" data-board="all" data-c="var(--sun)">All</button>
+        <button type="button" aria-pressed="false" data-board="agents" data-c="var(--lime)">AI agents</button>
+        <button type="button" aria-pressed="false" data-board="frontend" data-c="var(--pink)">Frontend &amp; full-stack</button>
+        <button type="button" aria-pressed="false" data-board="ml" data-c="var(--sky)">ML &amp; vision</button>
+        <button type="button" aria-pressed="false" data-board="recsys" data-c="var(--mint)">RecSys</button>
+        <button type="button" aria-pressed="false" data-board="experience" data-c="var(--lilac)">Experience</button>
+      </div>
+    </div>
+    <p class="sr" id="filter-status" role="status" aria-live="polite"></p>
+
+    <div class="board" id="board">
+
+      <article class="pin" data-id="hello" data-boards="experience">
+        <div class="art about pad" aria-hidden="true">
+          <svg class="face" viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="#fff" stroke="#1A1033" stroke-width="5"/>
+            <g class="blink"><ellipse cx="44" cy="54" rx="6" ry="9" fill="#1A1033"/><ellipse cx="76" cy="54" rx="6" ry="9" fill="#1A1033"/></g>
+            <path d="M40 76 Q60 94 80 76" fill="none" stroke="#1A1033" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="32" cy="72" r="7" fill="#FF6FA5" opacity=".7"/><circle cx="88" cy="72" r="7" fill="#FF6FA5" opacity=".7"/></svg>
+          <span class="kick">hello, world</span><h4>I'm Aruna.</h4>
+          <p>I care about the plumbing that makes AI useful, and the details that make interfaces kind.</p></div>
+        <div class="cap"><h3><button type="button">About me</button></h3><span>Start here</span></div>
+      </article>
+
+      <article class="pin" data-id="panw" data-boards="agents experience frontend">
+        <span class="chip-open" aria-hidden="true">Open ↗</span>
+        <div class="art trace pad" aria-hidden="true"><span class="kick">Palo Alto Networks · 2026</span>
+          <span class="big"><span class="count" data-to="47">47</span>%</span>
+          <span style="font-weight:700;margin-top:-6px">of support requests now self-served by an AI agent</span>
+          <div class="wf">
+            <div>identity<s style="--o:0%;--w:14%;--d:0s"></s></div>
+            <div>retrieve<s style="--o:10%;--w:30%;--d:.2s"></s></div>
+            <div>plan<s style="--o:38%;--w:16%;--d:.5s"></s></div>
+            <div>tools ×26<s style="--o:50%;--w:34%;--d:.7s"></s></div>
+            <div>answer<s style="--o:82%;--w:18%;--d:1s"></s></div>
+          </div></div>
+        <div class="cap"><h3><button type="button">Production AI assistant for an observability platform</button></h3><div class="tags"><em>Google ADK</em><em>MCP</em><em>RAG</em><em>React/TS</em></div></div>
+      </article>
+
+      <article class="pin" data-id="a11y" data-boards="frontend experience">
+        <span class="chip-open" aria-hidden="true">Open ↗</span>
+        <div class="art a11y pad" aria-hidden="true"><span class="kick">Student Assistant · since Jan 2025</span>
+          <h4>Making files work for everyone</h4>
+          <div class="doc">
+            <div class="h">Week 3 Notes <code>&lt;h1&gt;</code></div>
+            <div class="lowc">Readings are due before Thursday's lab.</div>
+            <div class="img"><i></i><span>Enrollment by year <code>alt ✓</code></span></div>
+          </div>
+          <div class="score"><span>text contrast</span><span class="ratio"><b class="bad">1.4 : 1 ✕</b><b class="good">16 : 1 ✓</b></span></div></div>
+        <div class="cap"><h3><button type="button">Accessibility remediation and automation</button></h3><div class="tags"><em>ADA</em><em>WCAG</em><em>Automation</em></div></div>
+      </article>
+
+      <article class="pin" data-id="cartlog" data-boards="agents frontend">
+        <span class="chip-open" aria-hidden="true">Open ↗</span>
+        <div class="art race pad" aria-hidden="true"><span class="kick">CartLog AI · agents over MCP</span>
+          <div class="row"><span>one by one</span><b>2.6s</b></div>
+          <div class="lanes seq">
+            <div class="lane"><span>research</span><div class="track"><s style="--start:0%;--len:27%"></s></div></div>
+            <div class="lane"><span>ebay</span><div class="track"><s style="--start:27%;--len:35%"></s></div></div>
+            <div class="lane"><span>amazon</span><div class="track"><s style="--start:62%;--len:38%"></s></div></div>
+          </div>
+          <div class="row"><span>in parallel</span><b>1.1s ⚡</b></div>
+          <div class="lanes par">
+            <div class="lane"><span>research</span><div class="track"><s style="--plen:27%"></s></div></div>
+            <div class="lane"><span>ebay</span><div class="track"><s style="--plen:35%"></s></div></div>
+            <div class="lane"><span>amazon</span><div class="track"><s style="--plen:41%"></s></div></div>
+          </div></div>
+        <div class="cap"><h3><button type="button">Snap a product, three agents shop at once</button></h3><div class="tags"><em>MCP</em><em>FastAPI</em><em>React</em><em>VLM</em></div></div>
+      </article>
+
+      <article class="pin" data-id="allergen" data-boards="ml frontend">
+        <span class="chip-open" aria-hidden="true">Open ↗</span>
+        <div class="art scan pad" aria-hidden="true"><div class="line"></div>
+          <span class="kick" style="font-family:var(--body)">AllergenCheck · scanning label</span>
+          <div>INGREDIENTS: SUGAR, ENRICHED <mark style="--d:.25s">WHEAT FLOUR</mark>, PALM OIL, <mark style="--d:.75s">WHEY</mark>, COCOA, SOY LECITHIN, SALT. <span class="warn">MAY CONTAIN TREE NUTS.</span></div>
+          <span class="verdict">✕ Don't eat · gluten, milk</span></div>
+        <div class="cap"><h3><button type="button">Is this label safe for me?</button></h3><div class="tags"><em>OCR</em><em>Rule engine</em><em>Docker</em></div></div>
+      </article>
+
+      <article class="pin" data-id="site" data-boards="frontend">
+        <span class="chip-open" aria-hidden="true">Open ↗</span>
+        <div class="art site pad" aria-hidden="true"><span class="kick">This website</span>
+          <div class="code"><span class="k">const</span> stack = [<br>&nbsp;&nbsp;<span class="s">"HTML"</span>, <span class="s">"CSS"</span>, <span class="s">"vanilla JS"</span><br>];<br><span class="k">const</span> frameworks = <span class="n">0</span>;</div>
+          <div class="stats"><div><b>AA</b><small>contrast</small></div><div><b>⌨</b><small>keyboard</small></div><div><b class="kb">—</b><small>page size</small></div></div></div>
+        <div class="cap"><h3><button type="button">This site, built from scratch</button></h3><div class="tags"><em>No framework</em><em>Accessible</em><em>Masonry</em></div></div>
+      </article>
+
+      <article class="pin" data-id="cyclegan" data-boards="ml">
+        <span class="chip-open" aria-hidden="true">Open ↗</span>
+        <div class="art toon above">
+          <svg viewBox="0 0 200 250" aria-hidden="true"><use href="#scene"/></svg>
+          <svg viewBox="0 0 200 250" class="gray" aria-hidden="true"><use href="#scene"/></svg>
+          <span class="handle" aria-hidden="true"></span>
+          <span class="lbl" style="left:12px" aria-hidden="true">input</span><span class="lbl" style="right:12px" aria-hidden="true">colorized</span>
+          <input type="range" min="0" max="100" value="50" aria-label="Before and after: drag to compare grayscale and color" data-slider>
+        </div>
+        <div class="cap"><h3><button type="button">Coloring black-and-white cartoons with CycleGAN</button></h3><span>Drag to compare · illustration of the idea</span></div>
+      </article>
+
+      <article class="pin" data-id="pinrec" data-boards="recsys ml">
+        <span class="chip-open" aria-hidden="true">Open ↗</span>
+        <div class="art recs pad" aria-hidden="true"><span class="wip">building now</span>
+          <div class="mini">
+            <i style="--t:var(--pink);--d:0s;grid-row:span 2"></i><i style="--t:var(--sun);--d:.2s"></i><i style="--t:var(--violet);--d:.4s;grid-row:span 2"></i><i style="--t:var(--sky);--d:.6s"></i>
+            <i style="--t:var(--tomato);--d:.8s"></i><i style="--t:var(--lime);--d:1s"></i>
+          </div>
+          <div class="chips"><span>two-tower + CLIP</span><span>Pixie-style walks</span><span>GBDT ranker</span></div></div>
+        <div class="cap"><h3><button type="button">PinRec: a two-stage visual recommender</button></h3><div class="tags"><em>PyTorch</em><em>RecSys</em><em>FastAPI</em></div></div>
+      </article>
+
+      <article class="pin" data-id="notes" data-boards="agents">
+        <div class="art quote pad" aria-hidden="true"><span class="kick">field notes</span><p>A good agent is mostly good <mark>plumbing</mark>: retrieval, permissions, timeouts and traces.</p></div>
+        <div class="cap"><h3><button type="button">What I've learned building agents</button></h3><span>5 lessons</span></div>
+      </article>
+
+      <article class="pin" data-id="colruyt" data-boards="experience frontend">
+        <span class="chip-open" aria-hidden="true">Open ↗</span>
+        <div class="art spark pad" aria-hidden="true"><span class="when">Colruyt Group · 2023–24</span><h4>Payments &amp; self-checkout APIs</h4>
+          <svg viewBox="0 0 260 84"><path class="a" d="M0 66 L20 58 L40 62 L60 48 L80 54 L100 42 L120 50 L140 36 L160 44 L180 34 L200 40 L220 30 L240 36 L260 26 L260 84 L0 84Z"/><path class="l" d="M0 66 L20 58 L40 62 L60 48 L80 54 L100 42 L120 50 L140 36 L160 44 L180 34 L200 40 L220 30 L240 36 L260 26"/><line x1="0" x2="260" y1="14" y2="14"/><text x="2" y="9">p95 budget · 100 ms</text></svg>
+          <div class="stack"><span>15+ REST APIs</span><span>99.99% uptime</span><span>−30% downtime</span></div></div>
+        <div class="cap"><h3><button type="button">Software Engineer, Colruyt Group</button></h3><span>Integration · CI/CD · Docker</span></div>
+      </article>
+
+      <article class="pin" data-id="research" data-boards="experience ml frontend">
+        <span class="chip-open" aria-hidden="true">Open ↗</span>
+        <div class="art edu pad" aria-hidden="true"><span class="when">SJSU · 2025–26</span><h4>Technology adoption × health outcomes</h4>
+          <div class="stack"><span>Statistical models</span><span>React</span><span>FastAPI</span></div></div>
+        <div class="cap"><h3><button type="button">Research Assistant, AI &amp; Analytics</button></h3><span>San José State University</span></div>
+      </article>
+
+      <article class="pin" data-id="skills" data-boards="agents ml frontend recsys">
+        <div class="art marq" aria-hidden="true"><div class="kick">toolbox</div>
+          <div class="b"><span>Python</span><span>TypeScript</span><span>React</span><span>PyTorch</span><span>MCP</span><span>RAG</span><span>Python</span><span>TypeScript</span><span>React</span><span>PyTorch</span><span>MCP</span><span>RAG</span></div>
+          <div class="b"><span>FastAPI</span><span>Node.js</span><span>SQL</span><span>GCP</span><span>Docker</span><span>WCAG</span><span>FastAPI</span><span>Node.js</span><span>SQL</span><span>GCP</span><span>Docker</span><span>WCAG</span></div>
+        </div>
+        <div class="cap"><h3><button type="button">Tools I work with</button></h3><span>Skills</span></div>
+      </article>
+
+    </div>
+    <p class="empty" id="empty" hidden>Nothing pinned for that yet. Try "agents", "React" or "WCAG".</p>
+
+    <section class="contact" id="contact" aria-labelledby="contact-h">
+      <div class="mesh" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <h2 id="contact-h">Let's make something <em class="f">good.</em></h2>
+      <p>I'm graduating in December 2026 and looking for software, full-stack and AI engineering roles. If your team builds things people use every day, I'd love to talk.</p>
+      <div class="cta"><button class="btn pink" type="button" data-copy>Copy my email</button><a class="btn" href="https://github.com/ArunaSamhitha" target="_blank" rel="noopener">GitHub ↗<span class="sr"> (opens in a new tab)</span></a></div>
+      <p class="addr">arunasamhitha.mutyala@sjsu.edu</p>
+    </section>
+    <footer><span>Designed and built by Aruna Samhitha. No frameworks were harmed.</span><span>Press <span class="kbd">⌘K</span> or <span class="kbd">/</span> to search</span></footer>
+  </div>
 </main>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="scene"><rect width="200" height="250" fill="#5BA8E6"/><rect y="170" width="200" height="80" fill="#3E8E4F"/>
+    <circle cx="160" cy="45" r="22" fill="#FFD23F"/>
+    <path d="M30 170 L60 120 L90 170Z" fill="#7A5230"/><path d="M110 170 L150 95 L190 170Z" fill="#8C6239"/>
+    <g transform="translate(100 120)"><path d="M-26 70 L0 -10 L26 70Z" fill="#1E5BD6"/><path d="M-26 70 Q0 40 26 70" fill="#D7263D"/>
+      <circle cy="-26" r="18" fill="#F2C29B"/><path d="M-18 -32 Q0 -52 18 -32 L18 -38 Q0 -60 -18 -38Z" fill="#1A1A1A"/><path d="M-12 16 L12 16 L0 32Z" fill="#FFD23F"/></g>
+    <g fill="none" stroke="#111" stroke-width="2.5" stroke-linejoin="round"><path d="M30 170 L60 120 L90 170Z"/><path d="M110 170 L150 95 L190 170Z"/><circle cx="160" cy="45" r="22"/><g transform="translate(100 120)"><path d="M-26 70 L0 -10 L26 70Z"/><circle cy="-26" r="18"/></g></g></g>
+</defs></svg>
+
 <dialog class="closeup" id="closeup" aria-labelledby="cu-title">
-  <button class="close" type="button" id="cu-close" aria-label="Close">×</button>
+  <button class="x" type="button" id="cu-close" aria-label="Close">×</button>
   <div class="cu"><div class="cu-art" id="cu-art"></div><div class="cu-body" id="cu-body"></div>
     <div class="more"><h3>More like this</h3><div class="more-row" id="cu-more"></div></div></div>
 </dialog>
 
-<dialog class="palette" id="palette" aria-label="Search">
+<dialog class="palette" id="palette" aria-label="Search work">
   <div class="pal-in"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-    <input id="pal-q" placeholder="Search projects, skills, actions…" autocomplete="off" aria-controls="pal-list"><span class="kbd">esc</span></div>
-  <ul class="pal-list" id="pal-list" role="listbox"></ul>
+    <input id="pal-q" placeholder="Search projects, skills, actions…" autocomplete="off" aria-label="Search" role="combobox" aria-expanded="true" aria-controls="pal-list"><span class="kbd" aria-hidden="true">esc</span></div>
+  <ul class="pal-list" id="pal-list" role="listbox" aria-label="Results"></ul>
 </dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
 
 <script>
 const EMAIL = "arunasamhitha.mutyala@sjsu.edu";
+const PIN_BG = { hello: "var(--sun)", panw: "var(--sky)", a11y: "var(--lilac)", cartlog: "var(--lime)", allergen: "var(--peach)", site: "var(--pink)",
+  cyclegan: "var(--sky)", pinrec: "var(--mint)", notes: "var(--lime)", colruyt: "var(--lilac)", research: "var(--sky)", skills: "var(--peach)" };
 const DETAIL = {
   hello: {kicker: "About", title: "Hi, I'm Aruna Samhitha", html: `
-    <p>I'm an AI and software engineer finishing an MS in Computer Engineering at San José State University (December 2026). I like the part of AI work that turns a model into something people rely on: tool calling, retrieval, permissions, evaluation and the full-stack app around it.</p>
-    <p>Most recently I built a production AI assistant at Palo Alto Networks. Before grad school I spent a year and a half building payment and self-checkout APIs at Colruyt Group.</p>
-    <p>I'm looking for new-grad software, AI and ML engineering roles.</p>`,
-    actions: [["Email me", "mailto:" + EMAIL], ["GitHub", "https://github.com/ArunaSamhitha"]]},
+    <p>I'm a software and AI engineer finishing an MS in Computer Engineering at San José State University (December 2026). I like the part of the work where a clever model turns into something people rely on: the retrieval, the tools, the permissions, the evaluation, and the interface on top.</p>
+    <p>I've built a production AI agent at Palo Alto Networks, payment and self-checkout APIs at Colruyt Group, and research dashboards at SJSU. Since January 2025 I've been making university files accessible and automating that work.</p>
+    <p>I'm looking for new-grad software, full-stack and AI engineering roles.</p>`,
+    actions: [["Copy my email", "copy"], ["GitHub", "https://github.com/ArunaSamhitha"]]},
   panw: {kicker: "Palo Alto Networks · Software Engineering Intern, AI · Summer 2026", title: "A production AI assistant for an observability platform", html: `
     <p>Engineers across 60+ teams filed tickets for questions the platform could already answer. I built an end-to-end agent that resolves the issues behind 47% of those requests through self-service, across 18 environments.</p>
     <ul>
       <li><b>Agent:</b> Python with Google ADK, MCP, RAG and tool calling, integrating 26 tools across permissions, metrics, documentation, Helm workflows and navigation.</li>
       <li><b>Retrieval:</b> combined semantic retrieval with live platform data to cut prompt size by 59%. Every tool call runs under server-verified identity and permission-aware access.</li>
       <li><b>Diagnostics:</b> seven tools with BigQuery caching and fuzzy entity matching that find tenants, analyze metric cardinality and flag high-cardinality ingestion risks.</li>
-      <li><b>Product:</b> React/TypeScript frontend, Node.js integration layer and FastAPI services on GKE with Helm, with agent, retrieval and tool calls traced in Langfuse.</li>
+      <li><b>Frontend and services:</b> React/TypeScript UI, a Node.js integration layer and FastAPI services on GKE with Helm, with agent, retrieval and tool calls traced in Langfuse.</li>
     </ul>
     <p class="note">Internal work, so there's no public code. Happy to walk through the architecture.</p>`, actions: []},
+  a11y: {kicker: "San José State University · Student Assistant, Accessibility · Jan 2025 – present", title: "Making files work for everyone", html: `
+    <p>I remediate digital files so they meet ADA and WCAG requirements and work with screen readers and keyboard navigation, and I build automation pipelines that make remediation faster and more consistent.</p>
+    <ul>
+      <li><b>Remediation:</b> fixing what assistive technology depends on, like heading structure, reading order, alternative text, table markup and color contrast.</li>
+      <li><b>Automation:</b> pipelines that take repetitive remediation steps off people's plates, so files get fixed faster and checked the same way every time.</li>
+      <li><b>How it shapes my frontend work:</b> accessibility isn't a final checklist. This site uses semantic HTML, a real button in every pin, keyboard support, AA contrast checked on every color pair, and respects reduced-motion settings.</li>
+    </ul>`, actions: []},
   cartlog: {kicker: "Project · AI agents", title: "CartLog AI: snap a product, three agents shop at once", html: `
     <p>Take a photo of a product or describe it. A vision-language model turns it into a structured search. Research, eBay and Amazon agents run as separate MCP servers and are called at the same time, each with its own timeout, so one slow marketplace never blocks the answer.</p>
     <ul>
       <li><b>Parallel fan-out</b> over MCP cut median latency from 2.6 s to 1.1 s (59%) in the benchmark, measured with simulated API latency.</li>
       <li><b>Ranking</b> by relevance, value against the researched price range, and rating.</li>
       <li><b>Memory</b> of past searches with SQLite plus vector recall (Pinecone, or local cosine similarity).</li>
-      <li><b>Tested end to end:</b> runs with no API keys on mock data, and CI drives a real browser through a search on every push.</li>
+      <li><b>React UI tested end to end:</b> runs with no API keys on mock data, and CI drives a real browser through a search on every push.</li>
     </ul>`, actions: [["View code", "https://github.com/ArunaSamhitha/CartLog-AI"]]},
   allergen: {kicker: "Project · Applied ML", title: "AllergenCheck: is this label safe for me?", html: `
     <p>Photograph an ingredient list, scan a barcode or paste the text, and get a verdict against your allergies and diet. Every flag points at the exact words on the label that caused it.</p>
     <ul>
       <li><b>Rules over an LLM:</b> version 1 let an LLM decide. Version 2 uses a deterministic engine covering 9 major allergens plus diets, label synonyms (whey → milk, semolina → wheat) and look-alike guards (nutmeg, cocoa butter, buckwheat).</li>
       <li><b>Label-aware:</b> reads "Contains" statements and "may contain" warnings separately, and repairs OCR typos without "correcting" real words.</li>
-      <li><b>Production setup:</b> OpenCV + Tesseract OCR in memory, Open Food Facts barcode lookup, FastAPI, Docker, and 38 tests including real OCR in CI.</li>
+      <li><b>Production setup:</b> OpenCV + Tesseract OCR in memory, Open Food Facts barcode lookup, FastAPI, a mobile-friendly web app, Docker, and 38 tests including real OCR in CI.</li>
     </ul>`, actions: [["View code", "https://github.com/ArunaSamhitha/Food-Allergen-Detection-System"]]},
+  site: {kicker: "Frontend · this page", title: "This site, built from scratch", html: `
+    <p>No framework and no UI library: one HTML file with hand-written CSS and vanilla JavaScript. I wanted it to feel playful without being heavy or locking anyone out.</p>
+    <ul>
+      <li><b>Masonry layout:</b> a small layout engine places each pin in the shortest column and animates pins to their new spots when you filter or search.</li>
+      <li><b>Live demos:</b> pin animations are pure CSS and only run while the pin is on screen (IntersectionObserver), so the page stays light.</li>
+      <li><b>Accessible:</b> landmarks and headings, a real button in every pin, a skip link, visible focus, a keyboard-friendly ⌘K palette, AA contrast on every color pair, and no motion for people who turn it off.</li>
+      <li><b>Details:</b> view transitions into close-ups, container-query typography, draggable stickers with pointer events, confetti on canvas, and light/dark themes.</li>
+    </ul>`, actions: [["View source", "https://github.com/ArunaSamhitha/arunasamhitha.github.io"]]},
   cyclegan: {kicker: "Project · Computer vision", title: "Coloring black-and-white cartoons with CycleGAN", html: `
     <p>A CycleGAN that learns to color cartoon frames without paired examples. It splits one folder of color frames into a grayscale half and a color half, so the model never sees the true colors of what it colors.</p>
     <ul>
@@ -479,7 +618,7 @@ const DETAIL = {
       <li><b>Data:</b> public-domain 1940s Fleischer Superman shorts, trained on a Colab T4 with one episode held out for testing.</li>
       <li><b>Inference:</b> colorizes images, folders or whole videos, and measures throughput in frames per second.</li>
     </ul>
-    <p class="note">The slider on this pin is an illustration of the idea. Real before/after frames will replace it after the training run.</p>`, actions: [["View code", "https://github.com/ArunaSamhitha/Cartoon-Colorization-Using-CycleGAN"]]},
+    <p class="note">The slider is an illustration of the idea. Real before/after frames will replace it after the training run.</p>`, actions: [["View code", "https://github.com/ArunaSamhitha/Cartoon-Colorization-Using-CycleGAN"]]},
   pinrec: {kicker: "Project · Recommender systems · in progress", title: "PinRec: a two-stage visual recommender", html: `
     <p>A home-feed-style recommender trained on Amazon Reviews 2023: real user histories plus product photos and titles, evaluated on the dataset's time-ordered splits.</p>
     <ul>
@@ -489,7 +628,7 @@ const DETAIL = {
       <li><b>Serving:</b> FastAPI with a pinboard UI: pick a user to see their feed, click any item for "more like this".</li>
     </ul>
     <p class="note">Built and tested on synthetic data. Results on the real dataset are coming after the training run.</p>`, actions: []},
-  notes: {kicker: "Notes", title: "What I've learned building agents", html: `
+  notes: {kicker: "Field notes", title: "What I've learned building agents", html: `
     <ul>
       <li><b>Retrieval beats a bigger prompt.</b> Pulling only the relevant docs and live data cut prompt size by 59% and made answers more grounded.</li>
       <li><b>Permissions belong on the server.</b> The agent should never be the thing deciding who's allowed to do what.</li>
@@ -509,15 +648,11 @@ const DETAIL = {
     <p>React and FastAPI dashboards visualize relationship patterns, model outputs and metrics, with APIs tuned for low-latency inference.</p>`, actions: []},
   skills: {kicker: "Skills", title: "Tools I work with", html: `
     <ul>
-      <li><b>AI engineering:</b> Google ADK, LangGraph, LangChain, MCP, agent orchestration, RAG, vector search, evaluation, guardrails, Langfuse</li>
-      <li><b>ML:</b> PyTorch, Hugging Face Transformers, scikit-learn, computer vision, OCR, recommender systems, GANs</li>
-      <li><b>Backend &amp; full-stack:</b> Python, SQL, TypeScript, FastAPI, Node.js, React, PostgreSQL</li>
-      <li><b>Cloud &amp; infra:</b> GCP (Vertex AI, BigQuery, GKE), Kubernetes, Docker, Helm, OpenTelemetry, CI/CD</li>
+      <li><b>Frontend:</b> React, TypeScript, JavaScript, HTML, CSS, accessibility (ADA, WCAG)</li>
+      <li><b>Backend:</b> Python, SQL, FastAPI, Node.js, PostgreSQL, REST APIs</li>
+      <li><b>AI &amp; ML:</b> Google ADK, LangGraph, MCP, RAG, vector search, PyTorch, Hugging Face, computer vision, recommender systems</li>
+      <li><b>Cloud &amp; infra:</b> GCP (Vertex AI, BigQuery, GKE), Kubernetes, Docker, Helm, CI/CD</li>
     </ul>`, actions: []},
-  contact: {kicker: "Contact", title: "Let's build something", html: `
-    <p>I'm graduating in December 2026 and looking for software, AI and ML engineering roles. Email is the fastest way to reach me.</p>
-    <p style="font:500 15px var(--mono);color:var(--ink)">${EMAIL}</p>`,
-    actions: [["Email me", "mailto:" + EMAIL], ["GitHub", "https://github.com/ArunaSamhitha"]]},
 };
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -527,42 +662,67 @@ const board = $("#board");
 const pins = $$(".pin", board);
 let current = "all", query = "";
 
-/* ---------- toast + copy ---------- */
-function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 1800); }
-async function copyEmail() {
-  try { await navigator.clipboard.writeText(EMAIL); toast("Email copied"); }
-  catch { toast(EMAIL); }
+/* ---------- toast, copy, confetti ---------- */
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2200); }
+const cv = $("#confetti"), cx = cv.getContext("2d");
+function confetti(x, y) {
+  if (reduce) return;
+  const dpr = devicePixelRatio || 1;
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const cols = ["#FF6FA5", "#FFD23F", "#C8F560", "#7DD8FF", "#6B3FF2", "#FF5A47", "#6EE7B7"];
+  const bits = Array.from({ length: 90 }, () => ({ x, y, vx: (Math.random() - .5) * 13, vy: -Math.random() * 13 - 4, r: Math.random() * 6 + 4,
+    c: cols[(Math.random() * cols.length) | 0], a: Math.random() * 6, va: (Math.random() - .5) * .3, round: Math.random() < .4 }));
+  const t0 = performance.now();
+  (function frame(t) {
+    cx.clearRect(0, 0, innerWidth, innerHeight);
+    for (const b of bits) { b.vy += .45; b.x += b.vx; b.y += b.vy; b.a += b.va; b.vx *= .99;
+      cx.save(); cx.translate(b.x, b.y); cx.rotate(b.a); cx.fillStyle = b.c;
+      if (b.round) { cx.beginPath(); cx.arc(0, 0, b.r / 2, 0, 7); cx.fill(); } else cx.fillRect(-b.r / 2, -b.r / 4, b.r, b.r / 2);
+      cx.restore(); }
+    if (t - t0 < 2200) requestAnimationFrame(frame); else cx.clearRect(0, 0, innerWidth, innerHeight);
+  })(t0);
 }
-$("#copy-top").addEventListener("click", copyEmail);
+async function copyEmail(el) {
+  try { await navigator.clipboard.writeText(EMAIL); toast("Email copied. Talk soon!"); }
+  catch { toast(EMAIL); }
+  const r = el?.getBoundingClientRect?.();
+  if (r) confetti(r.left + r.width / 2, r.top + r.height / 2);
+}
+document.addEventListener("click", (e) => { const c = e.target.closest("[data-copy]"); if (c) { e.stopPropagation(); copyEmail(c); } });
 
 /* ---------- theme ---------- */
-function setTheme(t) { document.documentElement.setAttribute("data-theme", t); try { localStorage.setItem("as-theme", t); } catch {} }
 try { const t = localStorage.getItem("as-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch {}
 $("#theme").addEventListener("click", () => {
-  const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-  setTheme(dark ? "light" : "dark");
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.setAttribute("data-theme", dark ? "light" : "dark");
+  try { localStorage.setItem("as-theme", dark ? "light" : "dark"); } catch {}
 });
 
-/* ---------- hero: word roll, clock, parallax ---------- */
-const words = $$("h1 .roll span"); let wi = 0;
-if (!reduce) setInterval(() => {
-  const cur = words[wi]; cur.classList.remove("on"); cur.classList.add("out");
-  setTimeout(() => cur.classList.remove("out"), 700);
-  wi = (wi + 1) % words.length; words[wi].classList.add("on");
-}, 2400);
-function tick() {
-  try { $("#clock").textContent = "San Francisco · " + new Intl.DateTimeFormat("en-US", { timeZone: "America/Los_Angeles", hour: "numeric", minute: "2-digit" }).format(new Date()); } catch {}
-}
+/* ---------- hero: letters, clock, stickers ---------- */
+const LETTER_COLORS = ["#FF6FA5", "#3448FF", "#16A34A", "#FF5A47", "#6B3FF2", "#E0A800", "#0EA5E9"];
+$$(".name .w").forEach((w, wi) => { w.innerHTML = [...w.textContent].map((c, i) => `<span class="ch" style="--c:${LETTER_COLORS[(i + wi * 3) % LETTER_COLORS.length]}">${c}</span>`).join(""); });
+function tick() { try { $("#clock").textContent = "San Francisco · " + new Intl.DateTimeFormat("en-US", { timeZone: "America/Los_Angeles", hour: "numeric", minute: "2-digit" }).format(new Date()); } catch {} }
 tick(); setInterval(tick, 30000);
-const hero = $(".hero");
-hero.addEventListener("pointermove", (e) => {
-  if (reduce || e.pointerType !== "mouse") return;
-  const r = hero.getBoundingClientRect();
-  $("#floaters").style.setProperty("--mx", ((e.clientX - r.left) / r.width - .5).toFixed(3));
-  $("#floaters").style.setProperty("--my", ((e.clientY - r.top) / r.height - .5).toFixed(3));
+const stickerMode = matchMedia("(max-width:820px)");
+$$(".sticker").forEach((s) => {
+  let sx, sy, ox, oy;
+  s.addEventListener("pointerdown", (e) => {
+    if (stickerMode.matches) return;
+    s.setPointerCapture(e.pointerId); s.classList.add("dragging");
+    const host = s.offsetParent.getBoundingClientRect(), r = s.getBoundingClientRect();
+    sx = e.clientX; sy = e.clientY; ox = r.left - host.left; oy = r.top - host.top;
+    s.style.left = ox + "px"; s.style.top = oy + "px"; s.style.right = "auto";
+  });
+  s.addEventListener("pointermove", (e) => {
+    if (!s.classList.contains("dragging")) return;
+    s.style.left = ox + e.clientX - sx + "px"; s.style.top = oy + e.clientY - sy + "px";
+  });
+  const end = () => { if (!s.classList.contains("dragging")) return; s.classList.remove("dragging"); s.style.setProperty("--r", (Math.random() * 16 - 8).toFixed(1) + "deg"); };
+  s.addEventListener("pointerup", end); s.addEventListener("pointercancel", end);
 });
 
-/* ---------- masonry with FLIP-style reflow ---------- */
+/* ---------- masonry with animated reflow ---------- */
 function visible(pin) {
   const d = DETAIL[pin.dataset.id];
   const onBoard = current === "all" || pin.dataset.boards.split(" ").includes(current);
@@ -570,15 +730,18 @@ function visible(pin) {
   return onBoard && (!query || text.includes(query));
 }
 function layout() {
-  const W = board.clientWidth, gap = W < 520 ? 12 : 18;
-  const cols = Math.max(1, Math.floor((W + gap) / (W < 520 ? 160 + gap : 270 + gap)));
+  const W = board.clientWidth, gap = W < 560 ? 12 : 20;
+  const cols = Math.max(1, Math.floor((W + gap) / ((W < 560 ? 160 : 270) + gap)));
   const colW = (W - gap * (cols - 1)) / cols;
   const heights = new Array(cols).fill(0);
   let shown = 0;
   for (const pin of pins) {
     pin.style.setProperty("--w", colW + "px");
-    if (!visible(pin)) { pin.classList.add("gone"); continue; }
-    pin.classList.remove("gone"); shown++;
+    const v = visible(pin);
+    pin.classList.toggle("gone", !v);
+    pin.inert = !v;
+    if (!v) continue;
+    shown++;
     const c = heights.indexOf(Math.min(...heights));
     pin.style.setProperty("--x", c * (colW + gap) + "px");
     pin.style.setProperty("--y", heights[c] + "px");
@@ -586,84 +749,76 @@ function layout() {
   }
   board.style.height = Math.max(...heights, 0) + "px";
   $("#empty").hidden = shown > 0;
+  return shown;
 }
 new ResizeObserver(() => layout()).observe(board);
 pins.forEach((p) => new ResizeObserver(() => layout()).observe(p));
 document.fonts?.ready.then(layout);
 
-/* entrance: stagger pins in as they scroll into view, run demos only while visible */
 const io = new IntersectionObserver((entries) => {
   for (const e of entries) {
-    e.target.classList.toggle("live", e.isIntersecting);
-    if (e.isIntersecting && e.target.classList.contains("enter")) {
-      const i = pins.indexOf(e.target);
-      e.target.animate([{ opacity: 0, translate: "0 40px", scale: .96 }, { opacity: 1, translate: "0 0", scale: 1 }],
-        { duration: reduce ? 0 : 700, delay: reduce ? 0 : (i % 6) * 70, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" });
-      e.target.classList.remove("enter");
+    e.target.classList.toggle("on", e.isIntersecting);
+    if (e.isIntersecting && !e.target.dataset.seen) {
+      e.target.dataset.seen = 1;
+      if (!reduce) e.target.animate([{ opacity: 0, translate: "0 46px", rotate: "-2deg" }, { opacity: 1, translate: "0 0", rotate: "0deg" }],
+        { duration: 800, delay: (pins.indexOf(e.target) % 4) * 80, easing: "cubic-bezier(.34,1.56,.64,1)", fill: "backwards" });
       countUp(e.target);
     }
   }
-}, { rootMargin: "0px 0px -8% 0px" });
-pins.forEach((p) => { p.classList.add("enter"); io.observe(p); });
-
+}, { rootMargin: "0px 0px -6% 0px" });
+pins.forEach((p) => io.observe(p));
 function countUp(pin) {
   const el = pin.querySelector(".count"); if (!el || reduce) return;
   const to = +el.dataset.to, t0 = performance.now();
   const step = (t) => { const k = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
   requestAnimationFrame(step);
 }
+try { const kb = Math.round(new Blob([document.documentElement.outerHTML]).size / 1024) + "KB"; $$(".kb").forEach((n) => n.textContent = kb); } catch {}
 
-/* ---------- boards + sliding indicator ---------- */
+/* ---------- boards ---------- */
 const boardsEl = $("#boards"), ind = $("#indicator");
 function moveIndicator() {
   const b = $(`[data-board="${current}"]`, boardsEl);
-  ind.style.width = b.offsetWidth + "px"; ind.style.transform = `translateX(${b.offsetLeft}px)`;
+  ind.style.width = b.offsetWidth + "px"; ind.style.transform = `translateX(${b.offsetLeft - 4}px)`; ind.style.setProperty("--ibg", b.dataset.c);
 }
-function counts() {
-  $$("button[data-board]", boardsEl).forEach((b) => {
-    const n = b.dataset.board === "all" ? pins.length : pins.filter((p) => p.dataset.boards.split(" ").includes(b.dataset.board)).length;
-    if (!b.querySelector(".count")) b.insertAdjacentHTML("beforeend", `<span class="count">${n}</span>`);
-  });
-}
-counts();
+$$("button[data-board]", boardsEl).forEach((b) => {
+  const n = b.dataset.board === "all" ? pins.length : pins.filter((p) => p.dataset.boards.split(" ").includes(b.dataset.board)).length;
+  b.insertAdjacentHTML("beforeend", `<span class="count"><span class="sr">, </span>${n}<span class="sr"> items</span></span>`);
+});
 boardsEl.addEventListener("click", (e) => {
   const b = e.target.closest("button[data-board]"); if (!b) return;
   current = b.dataset.board;
   $$("button[data-board]", boardsEl).forEach((x) => x.setAttribute("aria-pressed", x === b));
-  moveIndicator(); layout();
+  moveIndicator();
+  const n = layout();
+  $("#filter-status").textContent = `Showing ${n} ${n === 1 ? "item" : "items"}`;
   b.scrollIntoView({ inline: "nearest", block: "nearest", behavior: reduce ? "auto" : "smooth" });
 });
 addEventListener("resize", moveIndicator);
 document.fonts?.ready.then(moveIndicator); moveIndicator();
 
-/* ---------- tilt, glare, spotlight ---------- */
+/* ---------- tilt + glare ---------- */
 board.addEventListener("pointermove", (e) => {
   if (reduce || e.pointerType !== "mouse") return;
-  const wrap = $("#board-wrap").getBoundingClientRect();
-  $("#spot").style.setProperty("--sx", e.clientX - wrap.left + "px");
-  $("#spot").style.setProperty("--sy", e.clientY - wrap.top + "px");
   const art = e.target.closest(".pin")?.querySelector(".art"); if (!art) return;
   const r = art.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-  art.style.setProperty("--ry", ((px - .5) * 10).toFixed(2) + "deg");
-  art.style.setProperty("--rx", ((.5 - py) * 10).toFixed(2) + "deg");
+  art.style.setProperty("--ry", ((px - .5) * 9).toFixed(2) + "deg"); art.style.setProperty("--rx", ((.5 - py) * 9).toFixed(2) + "deg");
   art.style.setProperty("--gx", px * 100 + "%"); art.style.setProperty("--gy", py * 100 + "%");
 });
 board.addEventListener("pointerout", (e) => {
-  const art = e.target.closest?.(".pin")?.querySelector(".art");
-  if (art && !art.contains(e.relatedTarget)) { art.style.removeProperty("--rx"); art.style.removeProperty("--ry"); }
+  const pin = e.target.closest?.(".pin"); const art = pin?.querySelector(".art");
+  if (art && !pin.contains(e.relatedTarget)) { art.style.removeProperty("--rx"); art.style.removeProperty("--ry"); }
 });
 
-/* ---------- before/after slider (works in pin and close-up) ---------- */
+/* ---------- before/after slider ---------- */
 document.addEventListener("input", (e) => {
   if (!e.target.matches("[data-slider]")) return;
-  const toon = e.target.closest(".toon");
-  toon.classList.add("touched");
-  toon.style.setProperty("--pos", e.target.value + "%");
+  const toon = e.target.closest(".toon"); toon.classList.add("touched"); toon.style.setProperty("--pos", e.target.value + "%");
 });
-document.addEventListener("click", (e) => { if (e.target.matches("[data-slider]")) e.stopPropagation(); }, true);
 
 /* ---------- close-up ---------- */
 const dlg = $("#closeup");
+let opener = null;
 function related(id) {
   const mine = new Set(pins.find((p) => p.dataset.id === id).dataset.boards.split(" "));
   return pins.map((p) => ({ id: p.dataset.id, s: p.dataset.boards.split(" ").filter((b) => mine.has(b)).length }))
@@ -672,27 +827,31 @@ function related(id) {
 function render(id) {
   const d = DETAIL[id], pin = pins.find((p) => p.dataset.id === id);
   $("#cu-art").innerHTML = pin.querySelector(".art").outerHTML;
-  const art = $("#cu-art .art"); art.style.removeProperty("--rx"); art.style.removeProperty("--ry");
-  $$("*", art).forEach((n) => n.style.animationPlayState = "running");
+  const art = $("#cu-art .art"); art.setAttribute("aria-hidden", "true"); art.style.removeProperty("--rx"); art.style.removeProperty("--ry");
+  $$("input", art).forEach((i) => { i.tabIndex = -1; });
+  $$("*", art).forEach((n) => { n.style.animationPlayState = "running"; });
   $("#cu-body").innerHTML = `<span class="kick">${d.kicker}</span><h2 id="cu-title">${d.title}</h2>${d.html}` +
-    (d.actions.length ? `<div class="cta" style="margin:0">${d.actions.map(([t, u], i) => `<a class="btn${i ? " ghost" : " red"}" href="${u}" ${u.startsWith("http") ? 'target="_blank" rel="noopener"' : ""}>${t}${u.startsWith("http") ? " ↗" : ""}</a>`).join("")}</div>` : "");
-  $("#cu-more").innerHTML = related(id).map((r) => `<button type="button" data-open="${r}"><b>${DETAIL[r].title}</b><span>${DETAIL[r].kicker.split("·")[0]}</span></button>`).join("");
+    (d.actions.length ? `<div class="cta" style="margin:0">${d.actions.map(([t, u], i) => u === "copy"
+      ? `<button type="button" class="btn pink" data-copy>${t}</button>`
+      : `<a class="btn${i ? " light" : " pink"}" href="${u}" target="_blank" rel="noopener">${t} ↗<span class="sr"> (opens in a new tab)</span></a>`).join("")}</div>` : "");
+  $("#cu-more").innerHTML = related(id).map((r) => `<button type="button" data-open="${r}" style="--mbg:${PIN_BG[r]}"><b>${DETAIL[r].title}</b><span>${DETAIL[r].kicker.split("·")[0]}</span></button>`).join("");
 }
 function open(id) {
   if (!DETAIL[id]) return;
-  const go = () => { render(id); if (!dlg.open) dlg.showModal(); dlg.scrollTop = 0; };
+  if (!dlg.open) opener = document.activeElement;
+  const go = () => { render(id); if (!dlg.open) dlg.showModal(); dlg.scrollTop = 0; $("#cu-close").focus(); };
   if (document.startViewTransition && !reduce && !dlg.open) document.startViewTransition(go); else go();
   try { if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id); } catch {}
 }
 function close() { if (dlg.open) dlg.close(); }
-dlg.addEventListener("close", () => { try { if (location.hash) history.replaceState(null, "", location.pathname + location.search); } catch {} });
-board.addEventListener("click", (e) => {
-  if (e.target.closest("[data-copy]")) { e.stopPropagation(); copyEmail(); return; }
-  const p = e.target.closest(".pin"); if (p) open(p.dataset.id);
+dlg.addEventListener("close", () => {
+  try { if (location.hash) history.replaceState(null, "", location.pathname + location.search); } catch {}
+  if (opener && document.contains(opener)) opener.focus();
 });
-board.addEventListener("keydown", (e) => {
-  const p = e.target.closest?.(".pin");
-  if (p && e.target === p && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); open(p.dataset.id); }
+board.addEventListener("click", (e) => {
+  if (e.target.closest("[data-slider]")) return;
+  const p = e.target.closest(".pin"); if (!p) return;
+  opener = p.querySelector(".cap button"); open(p.dataset.id);
 });
 $("#cu-more").addEventListener("click", (e) => { const b = e.target.closest("[data-open]"); if (b) open(b.dataset.open); });
 $("#cu-close").addEventListener("click", close);
@@ -702,8 +861,8 @@ addEventListener("hashchange", () => { const id = location.hash.slice(1); DETAIL
 /* ---------- command palette ---------- */
 const pal = $("#palette"), palQ = $("#pal-q"), palList = $("#pal-list");
 const ACTIONS = [
-  { label: "Copy my email", hint: "action", run: copyEmail },
-  { label: "Toggle light / dark", hint: "action", run: () => $("#theme").click() },
+  { label: "Copy my email", hint: "action", run: () => copyEmail($("#open-palette")) },
+  { label: "Switch light / dark", hint: "action", run: () => $("#theme").click() },
   { label: "Open GitHub", hint: "link", run: () => window.open("https://github.com/ArunaSamhitha", "_blank", "noopener") },
 ];
 let palItems = [], palSel = 0;
@@ -713,8 +872,10 @@ function palRender() {
     text: (d.title + " " + d.kicker + " " + d.html.replace(/<[^>]+>/g, " ")).toLowerCase() }));
   palItems = [...projects, ...ACTIONS.map((a) => ({ ...a, text: a.label.toLowerCase() }))].filter((x) => !q || x.text.includes(q));
   palSel = Math.min(palSel, Math.max(0, palItems.length - 1));
-  palList.innerHTML = palItems.length ? palItems.map((x, i) => `<li role="option" aria-selected="${i === palSel}" data-i="${i}"><span>${x.label}</span><small>${x.hint}</small></li>`).join("")
+  palList.innerHTML = palItems.length ? palItems.map((x, i) => `<li role="option" id="opt-${i}" aria-selected="${i === palSel}" data-i="${i}"><span>${x.label}</span><small>${x.hint}</small></li>`).join("")
     : `<li aria-disabled="true"><span>No matches</span></li>`;
+  if (palItems.length) palQ.setAttribute("aria-activedescendant", "opt-" + palSel); else palQ.removeAttribute("aria-activedescendant");
+  palList.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: "nearest" });
 }
 function palOpen() { palQ.value = query; palSel = 0; palRender(); pal.showModal(); palQ.focus(); }
 function palRun(i) { const x = palItems[i]; if (!x) return; pal.close(); x.run(); }
@@ -729,7 +890,7 @@ palList.addEventListener("click", (e) => { const li = e.target.closest("li[data-
 pal.addEventListener("click", (e) => { if (e.target === pal) pal.close(); });
 addEventListener("keydown", (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); pal.open ? pal.close() : palOpen(); }
-  if (e.key === "/" && !pal.open && !dlg.open && document.activeElement.tagName !== "INPUT") { e.preventDefault(); palOpen(); }
+  if (e.key === "/" && !pal.open && !dlg.open && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); palOpen(); }
 });
 
 layout();
